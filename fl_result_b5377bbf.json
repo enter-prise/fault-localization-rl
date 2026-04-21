@@ -1,0 +1,299 @@
+{
+  "request_id": "65857422-936e-45d9-aa85-e64ff53aa212",
+  "timestamp": "2026-04-13T07:35:54.383871Z",
+  "mode": "inference",
+  "sample_idx": 0,
+  "repo_path": "data_storage/repos/astropy",
+  "bug_description": "Modeling's `separability_matrix` does not compute separability correctly for nested CompoundModels\nConsider the following model:\r\n\r\n```python\r\nfrom astropy.modeling import models as m\r\nfrom astropy.modeling.separable import separability_matrix\r\n\r\ncm = m.Linear1D(10) & m.Linear1D(5)\r\n```\r\n\r\nIt's separability matrix as you might expect is a diagonal:\r\n\r\n```python\r\n>>> separability_matrix(cm)\r\narray([[ True, False],\r\n       [False,  True]])\r\n```\r\n\r\nIf I make the model more complex:\r\n```python\r\n>>> separability_matrix(m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5))\r\narray([[ True,  True, False, False],\r\n       [ True,  True, False, False],\r\n       [False, False,  True, False],\r\n       [False, False, False,  True]])\r\n```\r\n\r\nThe output matrix is again, as expected, the outputs and inputs to the linear models are separable and independent of each other.\r\n\r\nIf however, I nest these compound models:\r\n```python\r\n>>> separability_matrix(m.Pix2Sky_TAN() & cm)\r\narray([[ True,  True, False, False]",
+  "primary_result": {
+    "rank": 1,
+    "node_id": "5521",
+    "score": 0.3936,
+    "entity_name": "separability_matrix",
+    "entity_type": "function",
+    "file_path": "astropy/modeling/separable.py",
+    "line_number": null,
+    "verifier_verdict": true,
+    "evidence": [
+      "name overlap=0.027",
+      "path overlap=0.0135",
+      "doc overlap=0.2703",
+      "code overlap=0.1216",
+      "candidate is a function node",
+      "candidate graph degree=1"
+    ],
+    "code_preview": "def separability_matrix(transform):\n    \"\"\"\n    Compute the correlation between outputs and inputs.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    separable_matrix : ndarray\n        A boolean correlation matrix o"
+  },
+  "navigation_final_node": {
+    "node_id": "5521",
+    "entity_name": "separability_matrix",
+    "entity_type": "function",
+    "file_path": "astropy/modeling/separable.py",
+    "line_number": null,
+    "verifier_result": {
+      "candidate_node_id": "5521",
+      "candidate_name": "separability_matrix",
+      "candidate_type": "function",
+      "candidate_path": "astropy/modeling/separable.py",
+      "support_score": 0.1836,
+      "oppose_score": 0.0,
+      "verdict": true,
+      "evidence": [
+        "name overlap=0.027",
+        "path overlap=0.0135",
+        "doc overlap=0.2703",
+        "code overlap=0.1216",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "llm_raw_output": null,
+      "llm_support_text": "",
+      "llm_oppose_text": "",
+      "llm_verdict": null
+    }
+  },
+  "top_candidates": [
+    {
+      "rank": 1,
+      "node_id": "5521",
+      "score": 0.3936,
+      "entity_name": "separability_matrix",
+      "entity_type": "function",
+      "file_path": "astropy/modeling/separable.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.027",
+        "path overlap=0.0135",
+        "doc overlap=0.2703",
+        "code overlap=0.1216",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def separability_matrix(transform):\n    \"\"\"\n    Compute the correlation between outputs and inputs.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    separable_matrix : ndarray\n        A boolean correlation matrix o"
+    },
+    {
+      "rank": 2,
+      "node_id": "5520",
+      "score": 0.3753,
+      "entity_name": "is_separable",
+      "entity_type": "function",
+      "file_path": "astropy/modeling/separable.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.027",
+        "path overlap=0.0135",
+        "doc overlap=0.2432",
+        "code overlap=0.1351",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def is_separable(transform):\n    \"\"\"\n    A separability test for the outputs of a transform.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    is_separable : ndarray\n        A boolean array with size ``transform.n_o"
+    },
+    {
+      "rank": 3,
+      "node_id": "4583",
+      "score": 0.3514,
+      "entity_name": "_calculate_separability_matrix",
+      "entity_type": "function",
+      "file_path": "astropy/modeling/core.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.027",
+        "path overlap=0.0135",
+        "doc overlap=0.1351",
+        "code overlap=0.1486",
+        "candidate is a function node",
+        "candidate has no graph neighbors"
+      ],
+      "code_preview": "def _calculate_separability_matrix(self):\n        \"\"\"\n        This is a hook which customises the behavior of modeling.separable.\n\n        This allows complex subclasses to customise the separability matrix.\n        If it returns `NotImplemented` the default behavior is used.\n        \"\"\"\n        ret"
+    },
+    {
+      "rank": 4,
+      "node_id": "9147",
+      "score": 0.3227,
+      "entity_name": "parse",
+      "entity_type": "function",
+      "file_path": "astropy/io/votable/converters.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "code overlap=0.0541",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def parse(self, value, config=None, pos=None):\n        if value == \"\":\n            return False, True\n        if value is False:\n            return False, True\n        mapping = {\n            \"TRUE\": (True, False),\n            \"FALSE\": (False, False),\n            \"1\": (True, False),\n            \"0\":"
+    },
+    {
+      "rank": 5,
+      "node_id": "9207",
+      "score": 0.3196,
+      "entity_name": "test_boolean_array_mask",
+      "entity_type": "function",
+      "file_path": "astropy/io/votable/tests/test_vo.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0135",
+        "code overlap=0.0405",
+        "candidate is a function node",
+        "candidate has no graph neighbors"
+      ],
+      "code_preview": "def test_boolean_array_mask(self):\n        assert_array_equal(\n            self.mask[\"booleanArray\"],\n            [\n                [False, False, False, False],\n                [False, False, False, False],\n                [False, False, True, False],\n                [True, True, True, True],\n     "
+    }
+  ],
+  "reasoner_trace": {
+    "mode": "rule_only",
+    "raw_output": null,
+    "chosen_index": null,
+    "llm_reason": "",
+    "score_details": [
+      {
+        "node_id": "5521",
+        "retrieval_score": 1.0581663217442236,
+        "base_score": 0.39361632020576776
+      },
+      {
+        "node_id": "9147",
+        "retrieval_score": 0.4924791635398335,
+        "base_score": 0.32271738449390125
+      },
+      {
+        "node_id": "9207",
+        "retrieval_score": 0.488442414992555,
+        "base_score": 0.3196434928072463
+      },
+      {
+        "node_id": "9198",
+        "retrieval_score": 0.449456507130738,
+        "base_score": 0.31393911538097113
+      },
+      {
+        "node_id": "5520",
+        "retrieval_score": 0.43303245633017357,
+        "base_score": 0.3752852708677138
+      },
+      {
+        "node_id": "9206",
+        "retrieval_score": 0.3931416470505847,
+        "base_score": 0.31726097360869704
+      },
+      {
+        "node_id": "9211",
+        "retrieval_score": 0.37653258203335055,
+        "base_score": 0.31346736860488783
+      },
+      {
+        "node_id": "9197",
+        "retrieval_score": 0.3370987940614163,
+        "base_score": 0.3138328752569408
+      },
+      {
+        "node_id": "9199",
+        "retrieval_score": 0.3329271620451786,
+        "base_score": 0.31102588175383217
+      },
+      {
+        "node_id": "4583",
+        "retrieval_score": 0.2711546607424571,
+        "base_score": 0.35137346111315604
+      }
+    ],
+    "top_after_rerank": [
+      [
+        "5521",
+        0.39361632020576776
+      ],
+      [
+        "5520",
+        0.3752852708677138
+      ],
+      [
+        "4583",
+        0.35137346111315604
+      ],
+      [
+        "9147",
+        0.32271738449390125
+      ],
+      [
+        "9207",
+        0.3196434928072463
+      ]
+    ]
+  },
+  "navigation_trace": {
+    "total_steps": 6,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=5521)",
+    "path": [
+      {
+        "step": 0,
+        "action": "RETRIEVE",
+        "from_node_id": "820",
+        "from_node_name": "test_assignment_and_copy",
+        "to_node_id": "5521",
+        "to_node_name": "separability_matrix",
+        "to_node_type": "function",
+        "file_path": "astropy/modeling/separable.py",
+        "reward": -0.0016051940373545959
+      },
+      {
+        "step": 1,
+        "action": "RETRIEVE",
+        "from_node_id": "5521",
+        "from_node_name": "separability_matrix",
+        "to_node_id": "5520",
+        "to_node_name": "is_separable",
+        "to_node_type": "function",
+        "file_path": "astropy/modeling/separable.py",
+        "reward": -0.006419826722812022
+      },
+      {
+        "step": 2,
+        "action": "RETRIEVE",
+        "from_node_id": "5520",
+        "from_node_name": "is_separable",
+        "to_node_id": "9147",
+        "to_node_name": "parse",
+        "to_node_type": "function",
+        "file_path": "astropy/io/votable/converters.py",
+        "reward": -0.01940050340677965
+      },
+      {
+        "step": 3,
+        "action": "RETRIEVE",
+        "from_node_id": "9147",
+        "from_node_name": "parse",
+        "to_node_id": "9207",
+        "to_node_name": "test_boolean_array_mask",
+        "to_node_type": "function",
+        "file_path": "astropy/io/votable/tests/test_vo.py",
+        "reward": -0.020179224135660118
+      },
+      {
+        "step": 4,
+        "action": "RETRIEVE",
+        "from_node_id": "9207",
+        "from_node_name": "test_boolean_array_mask",
+        "to_node_id": "9198",
+        "to_node_name": "test_bitarray_mask",
+        "to_node_type": "function",
+        "file_path": "astropy/io/votable/tests/test_vo.py",
+        "reward": -0.021518227742275478
+      },
+      {
+        "step": 5,
+        "action": "RETRIEVE",
+        "from_node_id": "9198",
+        "from_node_name": "test_bitarray_mask",
+        "to_node_id": "5521",
+        "to_node_name": "separability_matrix",
+        "to_node_type": "function",
+        "file_path": "astropy/modeling/separable.py",
+        "reward": -0.0016051940373545959
+      }
+    ]
+  }
+}

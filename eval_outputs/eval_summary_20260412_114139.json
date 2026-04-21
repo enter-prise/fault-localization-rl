@@ -1,0 +1,9 @@
+{
+  "n_samples": 10,
+  "file_oracle_coverage": 10,
+  "top1_file_acc": 0.3,
+  "top3_file_acc": 0.5,
+  "top5_file_acc": 0.5,
+  "avg_steps": 3.2,
+  "avg_runtime_sec": 3.8030107021331787
+}

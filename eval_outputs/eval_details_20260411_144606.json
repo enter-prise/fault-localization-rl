@@ -1,0 +1,2453 @@
+[
+  {
+    "sample_idx": 0,
+    "issue_preview": "Modeling's `separability_matrix` does not compute separability correctly for nested CompoundModels\nConsider the following model:\r\n\r\n```python\r\nfrom as",
+    "oracle_files": [
+      "astropy/modeling/separable.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/modeling/separable.py",
+    "primary_entity": "separability_matrix",
+    "primary_score": 0.3936,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=5521)",
+    "runtime_sec": 1.2614367008209229,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "5521",
+        "score": 0.3936,
+        "entity_name": "separability_matrix",
+        "entity_type": "function",
+        "file_path": "astropy/modeling/separable.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.027",
+          "path overlap=0.0135",
+          "doc overlap=0.2703",
+          "code overlap=0.1216",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def separability_matrix(transform):\n    \"\"\"\n    Compute the correlation between outputs and inputs.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    separable_matrix : ndarray\n        A boolean correlation matrix o"
+      },
+      {
+        "rank": 2,
+        "node_id": "5520",
+        "score": 0.3753,
+        "entity_name": "is_separable",
+        "entity_type": "function",
+        "file_path": "astropy/modeling/separable.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.027",
+          "path overlap=0.0135",
+          "doc overlap=0.2432",
+          "code overlap=0.1351",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def is_separable(transform):\n    \"\"\"\n    A separability test for the outputs of a transform.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    is_separable : ndarray\n        A boolean array with size ``transform.n_o"
+      },
+      {
+        "rank": 3,
+        "node_id": "4583",
+        "score": 0.3514,
+        "entity_name": "_calculate_separability_matrix",
+        "entity_type": "function",
+        "file_path": "astropy/modeling/core.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.027",
+          "path overlap=0.0135",
+          "doc overlap=0.1351",
+          "code overlap=0.1486",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def _calculate_separability_matrix(self):\n        \"\"\"\n        This is a hook which customises the behavior of modeling.separable.\n\n        This allows complex subclasses to customise the separability matrix.\n        If it returns `NotImplemented` the default behavior is used.\n        \"\"\"\n        ret"
+      },
+      {
+        "rank": 4,
+        "node_id": "9147",
+        "score": 0.3227,
+        "entity_name": "parse",
+        "entity_type": "function",
+        "file_path": "astropy/io/votable/converters.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "code overlap=0.0541",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def parse(self, value, config=None, pos=None):\n        if value == \"\":\n            return False, True\n        if value is False:\n            return False, True\n        mapping = {\n            \"TRUE\": (True, False),\n            \"FALSE\": (False, False),\n            \"1\": (True, False),\n            \"0\":"
+      },
+      {
+        "rank": 5,
+        "node_id": "9207",
+        "score": 0.3196,
+        "entity_name": "test_boolean_array_mask",
+        "entity_type": "function",
+        "file_path": "astropy/io/votable/tests/test_vo.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0135",
+          "code overlap=0.0405",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def test_boolean_array_mask(self):\n        assert_array_equal(\n            self.mask[\"booleanArray\"],\n            [\n                [False, False, False, False],\n                [False, False, False, False],\n                [False, False, True, False],\n                [True, True, True, True],\n     "
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "5521",
+      "score": 0.3936,
+      "entity_name": "separability_matrix",
+      "entity_type": "function",
+      "file_path": "astropy/modeling/separable.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.027",
+        "path overlap=0.0135",
+        "doc overlap=0.2703",
+        "code overlap=0.1216",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def separability_matrix(transform):\n    \"\"\"\n    Compute the correlation between outputs and inputs.\n\n    Parameters\n    ----------\n    transform : `~astropy.modeling.core.Model`\n        A (compound) model.\n\n    Returns\n    -------\n    separable_matrix : ndarray\n        A boolean correlation matrix o"
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=5521)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "5521",
+          "to_node_name": "separability_matrix",
+          "to_node_type": "function",
+          "file_path": "astropy/modeling/separable.py",
+          "reward": -0.0016051940373545959
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "5521",
+          "retrieval_score": 1.0581663217442236,
+          "base_score": 0.39361632020576776
+        },
+        {
+          "node_id": "9147",
+          "retrieval_score": 0.4924791635398335,
+          "base_score": 0.32271738449390125
+        },
+        {
+          "node_id": "9207",
+          "retrieval_score": 0.488442414992555,
+          "base_score": 0.3196434928072463
+        },
+        {
+          "node_id": "9198",
+          "retrieval_score": 0.449456507130738,
+          "base_score": 0.31393911538097113
+        },
+        {
+          "node_id": "5520",
+          "retrieval_score": 0.43303245633017357,
+          "base_score": 0.3752852708677138
+        },
+        {
+          "node_id": "9206",
+          "retrieval_score": 0.3931416470505847,
+          "base_score": 0.31726097360869704
+        },
+        {
+          "node_id": "9211",
+          "retrieval_score": 0.37653258203335055,
+          "base_score": 0.31346736860488783
+        },
+        {
+          "node_id": "9197",
+          "retrieval_score": 0.3370987940614163,
+          "base_score": 0.3138328752569408
+        },
+        {
+          "node_id": "9199",
+          "retrieval_score": 0.3329271620451786,
+          "base_score": 0.31102588175383217
+        },
+        {
+          "node_id": "4583",
+          "retrieval_score": 0.2711546607424571,
+          "base_score": 0.35137346111315604
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "5521",
+          0.39361632020576776
+        ],
+        [
+          "5520",
+          0.3752852708677138
+        ],
+        [
+          "4583",
+          0.35137346111315604
+        ],
+        [
+          "9147",
+          0.32271738449390125
+        ],
+        [
+          "9207",
+          0.3196434928072463
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 1,
+    "issue_preview": "Please support header rows in RestructuredText output\n### Description\r\n\r\nIt would be great if the following would work:\r\n\r\n```Python\r\n>>> from astropy",
+    "oracle_files": [
+      "astropy/io/ascii/rst.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/io/ascii/ui.py",
+    "primary_entity": "get_writer",
+    "primary_score": 0.3645,
+    "navigation_steps": 2,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=9581)",
+    "runtime_sec": 3.143317222595215,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "9581",
+        "score": 0.3645,
+        "entity_name": "get_writer",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/ui.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0177",
+          "path overlap=0.0354",
+          "doc overlap=0.1416",
+          "code overlap=0.0796",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def get_writer(writer_cls=None, fast_writer=True, **kwargs):\n    \"\"\"\n    Initialize a table writer allowing for common customizations.\n\n    Most of the default behavior for various parameters is determined by the Writer\n    class.\n\n    Parameters\n    ----------\n    writer_cls : ``writer_cls``\n      "
+      },
+      {
+        "rank": 2,
+        "node_id": "9582",
+        "score": 0.3642,
+        "entity_name": "write",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/ui.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0088",
+          "path overlap=0.0354",
+          "code overlap=0.115",
+          "candidate is a function node",
+          "candidate graph degree=5"
+        ],
+        "code_preview": "def write(\n    table,\n    output=None,\n    format=None,\n    fast_writer=True,\n    *,\n    overwrite=False,\n    **kwargs,\n):\n    # Docstring inserted below\n\n    # Specifically block the legacy `writer_cls` kwarg, which will otherwise cause a confusing\n    # exception later in the call to get_writer()."
+      },
+      {
+        "rank": 3,
+        "node_id": "9912",
+        "score": 0.3421,
+        "entity_name": "check_write_table",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/tests/test_write.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0177",
+          "path overlap=0.0265",
+          "code overlap=0.1062",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def check_write_table(test_def, table, fast_writer, out=None):\n    if out is None:\n        out = StringIO()\n\n    try:\n        ascii.write(table, out, fast_writer=fast_writer, **test_def[\"kwargs\"])\n    except ValueError as e:  # if format doesn't have a fast writer, ignore\n        if \"not in the list"
+      },
+      {
+        "rank": 4,
+        "node_id": "9526",
+        "score": 0.3388,
+        "entity_name": "_get_writer",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/core.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0177",
+          "path overlap=0.0354",
+          "doc overlap=0.0619",
+          "code overlap=0.1062",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def _get_writer(writer_cls, fast_writer, **kwargs):\n    \"\"\"Initialize a table writer allowing for common customizations. This\n    routine is for internal (package) use only and is useful because it depends\n    only on the \"core\" module.\n    \"\"\"\n    from .fastbasic import FastBasic\n\n    # A value of "
+      },
+      {
+        "rank": 5,
+        "node_id": "9913",
+        "score": 0.3363,
+        "entity_name": "check_write_table_via_table",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/tests/test_write.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0177",
+          "path overlap=0.0265",
+          "code overlap=0.0796",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def check_write_table_via_table(test_def, table, fast_writer, out=None):\n    if out is None:\n        out = StringIO()\n\n    test_def = copy.deepcopy(test_def)\n    if \"format\" in test_def[\"kwargs\"]:\n        format = f\"ascii.{test_def['kwargs']['format']}\"\n        del test_def[\"kwargs\"][\"format\"]\n    e"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "9581",
+      "score": 0.3645,
+      "entity_name": "get_writer",
+      "entity_type": "function",
+      "file_path": "astropy/io/ascii/ui.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0177",
+        "path overlap=0.0354",
+        "doc overlap=0.1416",
+        "code overlap=0.0796",
+        "candidate is a function node",
+        "candidate graph degree=2"
+      ],
+      "code_preview": "def get_writer(writer_cls=None, fast_writer=True, **kwargs):\n    \"\"\"\n    Initialize a table writer allowing for common customizations.\n\n    Most of the default behavior for various parameters is determined by the Writer\n    class.\n\n    Parameters\n    ----------\n    writer_cls : ``writer_cls``\n      "
+    },
+    "navigation_trace": {
+      "total_steps": 2,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=9581)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "9582",
+          "to_node_name": "write",
+          "to_node_type": "function",
+          "file_path": "astropy/io/ascii/ui.py",
+          "reward": -0.00918317159358234
+        },
+        {
+          "step": 1,
+          "action": "RETRIEVE",
+          "from_node_id": "9582",
+          "from_node_name": "write",
+          "to_node_id": "9581",
+          "to_node_name": "get_writer",
+          "to_node_type": "function",
+          "file_path": "astropy/io/ascii/ui.py",
+          "reward": -0.009295556313354714
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "9838",
+          "retrieval_score": 0.9734950372985847,
+          "base_score": 0.2588064024811372
+        },
+        {
+          "node_id": "9582",
+          "retrieval_score": 0.7364516047010986,
+          "base_score": 0.36420775029451863
+        },
+        {
+          "node_id": "9581",
+          "retrieval_score": 0.5514259771354117,
+          "base_score": 0.3644936140301552
+        },
+        {
+          "node_id": "9912",
+          "retrieval_score": 0.46972057475417134,
+          "base_score": 0.34209699666973925
+        },
+        {
+          "node_id": "10709",
+          "retrieval_score": 0.36229612001665473,
+          "base_score": 0.32865917291192076
+        },
+        {
+          "node_id": "9913",
+          "retrieval_score": 0.3427916313205895,
+          "base_score": 0.33626890582726254
+        },
+        {
+          "node_id": "9936",
+          "retrieval_score": 0.32184403636059644,
+          "base_score": 0.32751512745768746
+        },
+        {
+          "node_id": "9915",
+          "retrieval_score": 0.3141734194031834,
+          "base_score": 0.32966849477711496
+        },
+        {
+          "node_id": "9921",
+          "retrieval_score": 0.3105944480560629,
+          "base_score": 0.32634893199786175
+        },
+        {
+          "node_id": "9526",
+          "retrieval_score": 0.2941464365099974,
+          "base_score": 0.33876959011628976
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "9581",
+          0.3644936140301552
+        ],
+        [
+          "9582",
+          0.36420775029451863
+        ],
+        [
+          "9912",
+          0.34209699666973925
+        ],
+        [
+          "9526",
+          0.33876959011628976
+        ],
+        [
+          "9913",
+          0.33626890582726254
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 2,
+    "issue_preview": "ascii.qdp Table format assumes QDP commands are upper case\n### Description\n\nascii.qdp assumes that commands in a QDP file are upper case, for example,",
+    "oracle_files": [
+      "astropy/io/ascii/qdp.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/io/ascii/qdp.py",
+    "primary_entity": "_write_table_qdp",
+    "primary_score": 0.3693,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=9826)",
+    "runtime_sec": 1.3557775020599365,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "9826",
+        "score": 0.3693,
+        "entity_name": "_write_table_qdp",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/qdp.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0168",
+          "path overlap=0.0084",
+          "doc overlap=0.1345",
+          "code overlap=0.0504",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def _write_table_qdp(table, filename=None, err_specs=None):\n    \"\"\"Write a table to a QDP file.\n\n    Parameters\n    ----------\n    table : :class:`~astropy.table.Table`\n        Input table to be written\n    filename : str\n        Output QDP file name\n\n    Other Parameters\n    ----------------\n    er"
+      },
+      {
+        "rank": 2,
+        "node_id": "9825",
+        "score": 0.3632,
+        "entity_name": "_read_table_qdp",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/qdp.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0252",
+          "path overlap=0.0084",
+          "doc overlap=0.1429",
+          "code overlap=0.0672",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def _read_table_qdp(qdp_file, names=None, table_id=None, delimiter=None):\n    \"\"\"Read a table from a QDP file.\n\n    Parameters\n    ----------\n    qdp_file : str\n        Input QDP file name\n\n    Other Parameters\n    ----------------\n    names : list of str\n        Name of data columns (defaults to ['"
+      },
+      {
+        "rank": 3,
+        "node_id": "9821",
+        "score": 0.3461,
+        "entity_name": "_get_lines_from_file",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/qdp.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0168",
+          "path overlap=0.0084",
+          "code overlap=0.0756",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def _get_lines_from_file(qdp_file):\n    if \"\\n\" in qdp_file:\n        lines = qdp_file.split(\"\\n\")\n    elif isinstance(qdp_file, (str, os.PathLike)):\n        with open(qdp_file) as fobj:\n            lines = [line.strip() for line in fobj]\n    elif isinstance(qdp_file, Iterable):\n        lines = qdp_f"
+      },
+      {
+        "rank": 4,
+        "node_id": "10285",
+        "score": 0.3386,
+        "entity_name": "test_get_tables_from_qdp_file",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/tests/test_qdp.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0252",
+          "path overlap=0.0084",
+          "code overlap=0.084",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def test_get_tables_from_qdp_file(tmp_path):\n    example_qdp = \"\"\"\n    ! Swift/XRT hardness ratio of trigger: XXXX, name: BUBU X-2\n    ! Columns are as labelled\n    READ TERR 1\n    READ SERR 2\n    ! WT -- hard data\n    !MJD            Err (pos)       Err(neg)        Rate            Error\n    53000.1"
+      },
+      {
+        "rank": 5,
+        "node_id": "10292",
+        "score": 0.3385,
+        "entity_name": "test_read_write_simple_specify_name",
+        "entity_type": "function",
+        "file_path": "astropy/io/ascii/tests/test_qdp.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0084",
+          "path overlap=0.0084",
+          "code overlap=0.0924",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def test_read_write_simple_specify_name(tmp_path):\n    test_file = tmp_path / \"test.qdp\"\n    t1 = Table()\n    t1.add_column(Column(name=\"a\", data=[1, 2, 3]))\n    # Give a non-None err_specs\n    t1.write(test_file, format=\"ascii.qdp\")\n    t2 = Table.read(test_file, table_id=0, format=\"ascii.qdp\", nam"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "9826",
+      "score": 0.3693,
+      "entity_name": "_write_table_qdp",
+      "entity_type": "function",
+      "file_path": "astropy/io/ascii/qdp.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0168",
+        "path overlap=0.0084",
+        "doc overlap=0.1345",
+        "code overlap=0.0504",
+        "candidate is a function node",
+        "candidate graph degree=3"
+      ],
+      "code_preview": "def _write_table_qdp(table, filename=None, err_specs=None):\n    \"\"\"Write a table to a QDP file.\n\n    Parameters\n    ----------\n    table : :class:`~astropy.table.Table`\n        Input table to be written\n    filename : str\n        Output QDP file name\n\n    Other Parameters\n    ----------------\n    er"
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=9826)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "9826",
+          "to_node_name": "_write_table_qdp",
+          "to_node_type": "function",
+          "file_path": "astropy/io/ascii/qdp.py",
+          "reward": -0.007924168195872924
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "9826",
+          "retrieval_score": 0.9285141659583973,
+          "base_score": 0.3693052911237499
+        },
+        {
+          "node_id": "9825",
+          "retrieval_score": 0.8825998423609533,
+          "base_score": 0.3631994498405364
+        },
+        {
+          "node_id": "10292",
+          "retrieval_score": 0.8186074735061434,
+          "base_score": 0.3384903969216872
+        },
+        {
+          "node_id": "10284",
+          "retrieval_score": 0.7698495444472065,
+          "base_score": 0.12433027222462556
+        },
+        {
+          "node_id": "10288",
+          "retrieval_score": 0.7676888212053965,
+          "base_score": 0.3326375986813954
+        },
+        {
+          "node_id": "10289",
+          "retrieval_score": 0.7333006282329424,
+          "base_score": 0.3296770535209496
+        },
+        {
+          "node_id": "10290",
+          "retrieval_score": 0.719989546943684,
+          "base_score": 0.3293442764887181
+        },
+        {
+          "node_id": "9821",
+          "retrieval_score": 0.7065176395232374,
+          "base_score": 0.3461083191393414
+        },
+        {
+          "node_id": "10285",
+          "retrieval_score": 0.6899220088535928,
+          "base_score": 0.3386346048431885
+        },
+        {
+          "node_id": "9830",
+          "retrieval_score": 0.6714827989768888,
+          "base_score": 0.23892992711727934
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "9826",
+          0.3693052911237499
+        ],
+        [
+          "9825",
+          0.3631994498405364
+        ],
+        [
+          "9821",
+          0.3461083191393414
+        ],
+        [
+          "10285",
+          0.3386346048431885
+        ],
+        [
+          "10292",
+          0.3384903969216872
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 3,
+    "issue_preview": "In v5.3, NDDataRef mask propagation fails when one of the operand does not have a mask\n### Description\n\nThis applies to v5.3. \r\n\r\nIt looks like when o",
+    "oracle_files": [
+      "astropy/nddata/mixins/ndarithmetic.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/nddata/bitmask.py",
+    "primary_entity": "bitfield_to_boolean_mask",
+    "primary_score": 0.3937,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=13026)",
+    "runtime_sec": 2.147676706314087,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "13026",
+        "score": 0.3937,
+        "entity_name": "bitfield_to_boolean_mask",
+        "entity_type": "function",
+        "file_path": "astropy/nddata/bitmask.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0136",
+          "path overlap=0.0068",
+          "doc overlap=0.3401",
+          "code overlap=0.034",
+          "candidate is a function node",
+          "candidate graph degree=5"
+        ],
+        "code_preview": "def bitfield_to_boolean_mask(\n    bitfield,\n    ignore_flags=0,\n    flip_bits=None,\n    good_mask_value=False,\n    dtype=np.bool_,\n    flag_name_map=None,\n):\n    \"\"\"\n    bitfield_to_boolean_mask(bitfield, ignore_flags=None, flip_bits=None, \\\ngood_mask_value=False, dtype=numpy.bool_)\n    Converts an "
+      },
+      {
+        "rank": 2,
+        "node_id": "10392",
+        "score": 0.3532,
+        "entity_name": "process_fixed_shape_multidim_data",
+        "entity_type": "function",
+        "file_path": "astropy/io/misc/ecsv.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "path overlap=0.0068",
+          "doc overlap=0.1429",
+          "code overlap=0.0408",
+          "candidate is a function node",
+          "candidate graph degree=4"
+        ],
+        "code_preview": "def process_fixed_shape_multidim_data(\n    col: ColumnECSV,\n    str_vals: list[str] | npt.NDArray[np.str_],\n    mask: npt.NDArray[np.bool_] | None,\n) -> tuple[np.ndarray | np.ma.MaskedArray, tuple[int, ...]]:\n    \"\"\"\n    Handle fixed-shape multidimensional columns as JSON-encoded strings.\n\n    Examp"
+      },
+      {
+        "rank": 3,
+        "node_id": "13635",
+        "score": 0.3488,
+        "entity_name": "_arithmetic_mask",
+        "entity_type": "function",
+        "file_path": "astropy/nddata/mixins/ndarithmetic.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0136",
+          "path overlap=0.0068",
+          "doc overlap=0.1565",
+          "code overlap=0.0816",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def _arithmetic_mask(self, operation, operand, handle_mask, axis=None, **kwds):\n        \"\"\"\n        Calculate the resulting mask.\n\n        This is implemented as the piecewise ``or`` operation if both have a\n        mask.\n\n        Parameters\n        ----------\n        operation : callable\n          "
+      },
+      {
+        "rank": 4,
+        "node_id": "13700",
+        "score": 0.347,
+        "entity_name": "test_nddata_bitmask_arithmetic",
+        "entity_type": "function",
+        "file_path": "astropy/nddata/mixins/tests/test_ndarithmetic.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0068",
+          "path overlap=0.0068",
+          "code overlap=0.1224",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def test_nddata_bitmask_arithmetic():\n    # NDData.mask is usually assumed to be boolean, but could be\n    # a bitmask. Ensure bitmask works:\n    array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\n    mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\n\n    nref_nomask = NDDataRef(array)\n    nref_m"
+      },
+      {
+        "rank": 5,
+        "node_id": "17928",
+        "score": 0.3435,
+        "entity_name": "get_data_and_mask",
+        "entity_type": "function",
+        "file_path": "astropy/utils/masked/core.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0136",
+          "path overlap=0.0068",
+          "doc overlap=0.1429",
+          "code overlap=0.068",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def get_data_and_mask(array):\n    \"\"\"Split possibly masked array into unmasked and mask.\n\n    Parameters\n    ----------\n    array : array-like\n        Possibly masked item, judged by whether it has a ``mask`` attribute.\n        If so, checks for having an ``unmasked`` attribute (as expected for\n    "
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "13026",
+      "score": 0.3937,
+      "entity_name": "bitfield_to_boolean_mask",
+      "entity_type": "function",
+      "file_path": "astropy/nddata/bitmask.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0136",
+        "path overlap=0.0068",
+        "doc overlap=0.3401",
+        "code overlap=0.034",
+        "candidate is a function node",
+        "candidate graph degree=5"
+      ],
+      "code_preview": "def bitfield_to_boolean_mask(\n    bitfield,\n    ignore_flags=0,\n    flip_bits=None,\n    good_mask_value=False,\n    dtype=np.bool_,\n    flag_name_map=None,\n):\n    \"\"\"\n    bitfield_to_boolean_mask(bitfield, ignore_flags=None, flip_bits=None, \\\ngood_mask_value=False, dtype=numpy.bool_)\n    Converts an "
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=13026)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "13026",
+          "to_node_name": "bitfield_to_boolean_mask",
+          "to_node_type": "function",
+          "file_path": "astropy/nddata/bitmask.py",
+          "reward": -0.0017688928884841276
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "13700",
+          "retrieval_score": 1.0683333333333334,
+          "base_score": 0.34701445578231294
+        },
+        {
+          "node_id": "13635",
+          "retrieval_score": 0.4980813943919276,
+          "base_score": 0.34884659268292745
+        },
+        {
+          "node_id": "13026",
+          "retrieval_score": 0.3796581768101888,
+          "base_score": 0.3936751278896425
+        },
+        {
+          "node_id": "17944",
+          "retrieval_score": 0.2836077946417067,
+          "base_score": 0.31253237173679094
+        },
+        {
+          "node_id": "907",
+          "retrieval_score": 0.28117574554408725,
+          "base_score": 0.32665524397873824
+        },
+        {
+          "node_id": "18020",
+          "retrieval_score": 0.26616893098529615,
+          "base_score": 0.3324025225943603
+        },
+        {
+          "node_id": "10392",
+          "retrieval_score": 0.25459519689067056,
+          "base_score": 0.3532356282215865
+        },
+        {
+          "node_id": "7841",
+          "retrieval_score": 0.245129269763888,
+          "base_score": 0.3209921773223285
+        },
+        {
+          "node_id": "18430",
+          "retrieval_score": 0.22309650269609366,
+          "base_score": 0.3260195894381506
+        },
+        {
+          "node_id": "17928",
+          "retrieval_score": 0.22173400449271247,
+          "base_score": 0.34353654739122935
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "13026",
+          0.3936751278896425
+        ],
+        [
+          "10392",
+          0.3532356282215865
+        ],
+        [
+          "13635",
+          0.34884659268292745
+        ],
+        [
+          "13700",
+          0.34701445578231294
+        ],
+        [
+          "17928",
+          0.34353654739122935
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 4,
+    "issue_preview": "Possible bug in io.fits related to D exponents\nI came across the following code in ``fitsrec.py``:\r\n\r\n```python\r\n        # Replace exponent separator ",
+    "oracle_files": [
+      "astropy/io/fits/fitsrec.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/io/fits/fitsrec.py",
+    "primary_entity": "_ascii_encode",
+    "primary_score": 0.3864,
+    "navigation_steps": 8,
+    "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=10902)",
+    "runtime_sec": 4.6858298778533936,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "11212",
+        "score": 0.3864,
+        "entity_name": "_ascii_encode",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/fitsrec.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0312",
+          "path overlap=0.0156",
+          "doc overlap=0.2656",
+          "code overlap=0.2188",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def _ascii_encode(inarray, out=None):\n    \"\"\"\n    Takes a unicode array and fills the output string array with the ASCII\n    encodings (if possible) of the elements of the input array.  The two arrays\n    must be the same size (though not necessarily the same shape).\n\n    This is like an inplace ver"
+      },
+      {
+        "rank": 2,
+        "node_id": "10902",
+        "score": 0.3685,
+        "entity_name": "canonical",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/column.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.2031",
+          "code overlap=0.1562",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def canonical(self):\n        \"\"\"\n        Returns a 'canonical' string representation of this format.\n\n        This is in the proper form of Tw.d where T is the single character data\n        type code, w is the width in characters for this field, and d is the\n        number of digits after the decima"
+      },
+      {
+        "rank": 3,
+        "node_id": "12627",
+        "score": 0.367,
+        "entity_name": "interpolate_replace_nans",
+        "entity_type": "function",
+        "file_path": "astropy/convolution/convolve.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0156",
+          "doc overlap=0.2812",
+          "code overlap=0.0781",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def interpolate_replace_nans(array, kernel, convolve=convolve, **kwargs):\n    \"\"\"\n    Given a data set containing NaNs, replace the NaNs by interpolating from\n    neighboring data points with a given kernel.\n\n    Parameters\n    ----------\n    array : `numpy.ndarray`\n        Array to be convolved wit"
+      },
+      {
+        "rank": 4,
+        "node_id": "12143",
+        "score": 0.3574,
+        "entity_name": "_convert_pseudo_integer",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/hdu/image.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.1875",
+          "code overlap=0.1562",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def _convert_pseudo_integer(self, data):\n        \"\"\"\n        Handle \"pseudo-unsigned\" integers, if the user requested it.  Returns\n        the converted data array if so; otherwise returns None.\n\n        In this case case, we don't need to handle BLANK to convert it to NAN,\n        since we can't do"
+      },
+      {
+        "rank": 5,
+        "node_id": "1390",
+        "score": 0.3558,
+        "entity_name": "test_replace_update_column_via_setitem_replace_inplace",
+        "entity_type": "function",
+        "file_path": "astropy/table/tests/test_table.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0156",
+          "path overlap=0.0156",
+          "doc overlap=0.1094",
+          "code overlap=0.1406",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def test_replace_update_column_via_setitem_replace_inplace():\n    \"\"\"\n    Test the replace_inplace config option related to #5556.  In this\n    case no replace is done.\n    \"\"\"\n    t = table.Table([[1, 2, 3], [4, 5, 6]], names=[\"a\", \"b\"])\n    ta = t[\"a\"]\n    t[\"a\"].unit = \"m\"\n\n    with table.conf.se"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "11212",
+      "score": 0.3864,
+      "entity_name": "_ascii_encode",
+      "entity_type": "function",
+      "file_path": "astropy/io/fits/fitsrec.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0312",
+        "path overlap=0.0156",
+        "doc overlap=0.2656",
+        "code overlap=0.2188",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def _ascii_encode(inarray, out=None):\n    \"\"\"\n    Takes a unicode array and fills the output string array with the ASCII\n    encodings (if possible) of the elements of the input array.  The two arrays\n    must be the same size (though not necessarily the same shape).\n\n    This is like an inplace ver"
+    },
+    "navigation_trace": {
+      "total_steps": 8,
+      "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=10902)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "10902",
+          "to_node_name": "canonical",
+          "to_node_type": "function",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.008037831845653473
+        },
+        {
+          "step": 1,
+          "action": "RETRIEVE",
+          "from_node_id": "10902",
+          "from_node_name": "canonical",
+          "to_node_id": "1390",
+          "to_node_name": "test_replace_update_column_via_setitem_replace_inplace",
+          "to_node_type": "function",
+          "file_path": "astropy/table/tests/test_table.py",
+          "reward": -0.011197411179271838
+        },
+        {
+          "step": 2,
+          "action": "RETRIEVE",
+          "from_node_id": "1390",
+          "from_node_name": "test_replace_update_column_via_setitem_replace_inplace",
+          "to_node_id": "9497",
+          "to_node_name": "_replace_vals",
+          "to_node_type": "function",
+          "file_path": "astropy/io/ascii/core.py",
+          "reward": -0.016490773937520187
+        },
+        {
+          "step": 3,
+          "action": "RETRIEVE",
+          "from_node_id": "9497",
+          "from_node_name": "_replace_vals",
+          "to_node_id": "10897",
+          "to_node_name": "_AsciiColumnFormat",
+          "to_node_type": "class",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.039525076468956866
+        },
+        {
+          "step": 4,
+          "action": "RETRIEVE",
+          "from_node_id": "10897",
+          "from_node_name": "_AsciiColumnFormat",
+          "to_node_id": "10907",
+          "to_node_name": "_FormatP",
+          "to_node_type": "class",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.0464531383342692
+        },
+        {
+          "step": 5,
+          "action": "RETRIEVE",
+          "from_node_id": "10907",
+          "from_node_name": "_FormatP",
+          "to_node_id": "10902",
+          "to_node_name": "canonical",
+          "to_node_type": "function",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.008037831845653473
+        },
+        {
+          "step": 6,
+          "action": "RETRIEVE",
+          "from_node_id": "10902",
+          "from_node_name": "canonical",
+          "to_node_id": "10902",
+          "to_node_name": "canonical",
+          "to_node_type": "function",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.008037831845653473
+        },
+        {
+          "step": 7,
+          "action": "RETRIEVE",
+          "from_node_id": "10902",
+          "from_node_name": "canonical",
+          "to_node_id": "10902",
+          "to_node_name": "canonical",
+          "to_node_type": "function",
+          "file_path": "astropy/io/fits/column.py",
+          "reward": -0.008037831845653473
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "10902",
+          "retrieval_score": 0.897646316707815,
+          "base_score": 0.3685349079176954
+        },
+        {
+          "node_id": "1390",
+          "retrieval_score": 0.7302426922629368,
+          "base_score": 0.3557560673065734
+        },
+        {
+          "node_id": "10907",
+          "retrieval_score": 0.7253820055476325,
+          "base_score": 0.2154783001386908
+        },
+        {
+          "node_id": "10897",
+          "retrieval_score": 0.4759139164827233,
+          "base_score": 0.2431478479120681
+        },
+        {
+          "node_id": "9497",
+          "retrieval_score": 0.39716303172242295,
+          "base_score": 0.33446032579306056
+        },
+        {
+          "node_id": "11212",
+          "retrieval_score": 0.3513915994325295,
+          "base_score": 0.38644103998581325
+        },
+        {
+          "node_id": "12143",
+          "retrieval_score": 0.34626114833934457,
+          "base_score": 0.3574065287084836
+        },
+        {
+          "node_id": "12627",
+          "retrieval_score": 0.32448674908273767,
+          "base_score": 0.3670184187270684
+        },
+        {
+          "node_id": "1389",
+          "retrieval_score": 0.2761831553387983,
+          "base_score": 0.3404983288834699
+        },
+        {
+          "node_id": "5185",
+          "retrieval_score": 0.2624792483796651,
+          "base_score": 0.3159369812094916
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "11212",
+          0.38644103998581325
+        ],
+        [
+          "10902",
+          0.3685349079176954
+        ],
+        [
+          "12627",
+          0.3670184187270684
+        ],
+        [
+          "12143",
+          0.3574065287084836
+        ],
+        [
+          "1390",
+          0.3557560673065734
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 5,
+    "issue_preview": "Issue when passing empty lists/arrays to WCS transformations\nThe following should not fail but instead should return empty lists/arrays:\r\n\r\n```\r\nIn [1",
+    "oracle_files": [
+      "astropy/wcs/wcs.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/wcs/utils.py",
+    "primary_entity": "fit_wcs_from_points",
+    "primary_score": 0.3814,
+    "navigation_steps": 8,
+    "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=16333)",
+    "runtime_sec": 13.83031964302063,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "16429",
+        "score": 0.3814,
+        "entity_name": "fit_wcs_from_points",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/utils.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0159",
+          "path overlap=0.0159",
+          "doc overlap=0.2381",
+          "code overlap=0.0952",
+          "candidate is a function node",
+          "candidate graph degree=5"
+        ],
+        "code_preview": "def fit_wcs_from_points(\n    xy, world_coords, proj_point=\"center\", projection=\"TAN\", sip_degree=None\n):\n    \"\"\"\n    Given two matching sets of coordinates on detector and sky,\n    compute the WCS.\n\n    Fits a WCS object to matched set of input detector and sky coordinates.\n    Optionally, a SIP can"
+      },
+      {
+        "rank": 2,
+        "node_id": "16333",
+        "score": 0.3636,
+        "entity_name": "_array_converter",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/wcs.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0159",
+          "path overlap=0.0238",
+          "doc overlap=0.0397",
+          "code overlap=0.1746",
+          "candidate is a function node",
+          "candidate graph degree=5"
+        ],
+        "code_preview": "def _array_converter(self, func, sky, *args, ra_dec_order=False):\n        \"\"\"\n        A helper function to support reading either a pair of arrays\n        or a single Nx2 array.\n        \"\"\"\n\n        def _return_list_of_arrays(axes, origin):\n            if any(x.size == 0 for x in axes):\n            "
+      },
+      {
+        "rank": 3,
+        "node_id": "16335",
+        "score": 0.3585,
+        "entity_name": "wcs_pix2world",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/wcs.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0159",
+          "path overlap=0.0238",
+          "code overlap=0.1825",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def wcs_pix2world(self, *args, **kwargs):\n        if self.wcs is None:\n            raise ValueError(\"No basic WCS settings were created.\")\n        return self._array_converter(\n            lambda xy, o: self.wcs.p2s(xy, o)[\"world\"], \"output\", *args, **kwargs\n        )"
+      },
+      {
+        "rank": 4,
+        "node_id": "16338",
+        "score": 0.344,
+        "entity_name": "wcs_world2pix",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/wcs.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0079",
+          "path overlap=0.0238",
+          "code overlap=0.1587",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def wcs_world2pix(self, *args, **kwargs):\n        if self.wcs is None:\n            raise ValueError(\"No basic WCS settings were created.\")\n        return self._array_converter(\n            lambda xy, o: self.wcs.s2p(xy, o)[\"pixcrd\"], \"input\", *args, **kwargs\n        )"
+      },
+      {
+        "rank": 5,
+        "node_id": "16806",
+        "score": 0.3258,
+        "entity_name": "test_invalid_shape",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/tests/test_wcs.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "path overlap=0.0238",
+          "doc overlap=0.0079",
+          "code overlap=0.1032",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def test_invalid_shape():\n    \"\"\"Issue #1395\"\"\"\n    MESSAGE = r\"When providing two arguments, the array must be of shape [(]N, 2[)]\"\n\n    w = wcs.WCS(naxis=2)\n\n    xy = np.random.random((2, 3))\n    with pytest.raises(ValueError, match=MESSAGE):\n        w.wcs_pix2world(xy, 1)\n\n    xy = np.random.rand"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "16429",
+      "score": 0.3814,
+      "entity_name": "fit_wcs_from_points",
+      "entity_type": "function",
+      "file_path": "astropy/wcs/utils.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0159",
+        "path overlap=0.0159",
+        "doc overlap=0.2381",
+        "code overlap=0.0952",
+        "candidate is a function node",
+        "candidate graph degree=5"
+      ],
+      "code_preview": "def fit_wcs_from_points(\n    xy, world_coords, proj_point=\"center\", projection=\"TAN\", sip_degree=None\n):\n    \"\"\"\n    Given two matching sets of coordinates on detector and sky,\n    compute the WCS.\n\n    Fits a WCS object to matched set of input detector and sky coordinates.\n    Optionally, a SIP can"
+    },
+    "navigation_trace": {
+      "total_steps": 8,
+      "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=16333)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "16333",
+          "to_node_name": "_array_converter",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.009202739154886605
+        },
+        {
+          "step": 1,
+          "action": "RETRIEVE",
+          "from_node_id": "16333",
+          "from_node_name": "_array_converter",
+          "to_node_id": "16335",
+          "to_node_name": "wcs_pix2world",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.010364545177045187
+        },
+        {
+          "step": 2,
+          "action": "RETRIEVE",
+          "from_node_id": "16335",
+          "from_node_name": "wcs_pix2world",
+          "to_node_id": "16338",
+          "to_node_name": "wcs_world2pix",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.014140317099915395
+        },
+        {
+          "step": 3,
+          "action": "RETRIEVE",
+          "from_node_id": "16338",
+          "from_node_name": "wcs_world2pix",
+          "to_node_id": "16806",
+          "to_node_name": "test_invalid_shape",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/tests/test_wcs.py",
+          "reward": -0.0186998995308882
+        },
+        {
+          "step": 4,
+          "action": "RETRIEVE",
+          "from_node_id": "16806",
+          "from_node_name": "test_invalid_shape",
+          "to_node_id": "16334",
+          "to_node_name": "all_pix2world",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.018987037367901624
+        },
+        {
+          "step": 5,
+          "action": "RETRIEVE",
+          "from_node_id": "16334",
+          "from_node_name": "all_pix2world",
+          "to_node_id": "16333",
+          "to_node_name": "_array_converter",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.009202739154886605
+        },
+        {
+          "step": 6,
+          "action": "RETRIEVE",
+          "from_node_id": "16333",
+          "from_node_name": "_array_converter",
+          "to_node_id": "16333",
+          "to_node_name": "_array_converter",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.009202739154886605
+        },
+        {
+          "step": 7,
+          "action": "RETRIEVE",
+          "from_node_id": "16333",
+          "from_node_name": "_array_converter",
+          "to_node_id": "16333",
+          "to_node_name": "_array_converter",
+          "to_node_type": "function",
+          "file_path": "astropy/wcs/wcs.py",
+          "reward": -0.009202739154886605
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "16335",
+          "retrieval_score": 1.0623076923076924,
+          "base_score": 0.3585418192918193
+        },
+        {
+          "node_id": "16338",
+          "retrieval_score": 0.6543349552619236,
+          "base_score": 0.3439774215005957
+        },
+        {
+          "node_id": "16333",
+          "retrieval_score": 0.2574912519279025,
+          "base_score": 0.36358013844105475
+        },
+        {
+          "node_id": "16334",
+          "retrieval_score": 0.223569702967016,
+          "base_score": 0.32447813146306426
+        },
+        {
+          "node_id": "16806",
+          "retrieval_score": 0.18130335603193248,
+          "base_score": 0.32580242517063956
+        },
+        {
+          "node_id": "13161",
+          "retrieval_score": 0.16367715961051346,
+          "base_score": 0.3229808178791517
+        },
+        {
+          "node_id": "16429",
+          "retrieval_score": 0.16085705852443372,
+          "base_score": 0.38140237884406325
+        },
+        {
+          "node_id": "19190",
+          "retrieval_score": 0.15941959696761498,
+          "base_score": 0.3185092994479999
+        },
+        {
+          "node_id": "16331",
+          "retrieval_score": 0.15046987771778284,
+          "base_score": 0.3220157151969128
+        },
+        {
+          "node_id": "19250",
+          "retrieval_score": 0.14197253394583967,
+          "base_score": 0.3095016943010269
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "16429",
+          0.38140237884406325
+        ],
+        [
+          "16333",
+          0.36358013844105475
+        ],
+        [
+          "16335",
+          0.3585418192918193
+        ],
+        [
+          "16338",
+          0.3439774215005957
+        ],
+        [
+          "16806",
+          0.32580242517063956
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 6,
+    "issue_preview": "Set default FILE_UPLOAD_PERMISSION to 0o644.\nDescription\n\t\nHello,\nAs far as I can see, the ​File Uploads documentation page does not mention any permi",
+    "oracle_files": [
+      "django/conf/global_settings.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/coordinates/sky_coordinate.py",
+    "primary_entity": "transform_to",
+    "primary_score": 0.3905,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=14505)",
+    "runtime_sec": 0.9367885589599609,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "14505",
+        "score": 0.3905,
+        "entity_name": "transform_to",
+        "entity_type": "function",
+        "file_path": "astropy/coordinates/sky_coordinate.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0097",
+          "doc overlap=0.3204",
+          "code overlap=0.1262",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def transform_to(self, frame, merge_attributes=True):\n        \"\"\"Transform this coordinate to a new frame.\n\n        The precise frame transformed to depends on ``merge_attributes``.\n        If `False`, the destination frame is used exactly as passed in.\n        But this is often not quite what one w"
+      },
+      {
+        "rank": 2,
+        "node_id": "17135",
+        "score": 0.3889,
+        "entity_name": "get_pkg_data_filename",
+        "entity_type": "function",
+        "file_path": "astropy/utils/data.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0097",
+          "doc overlap=0.301",
+          "code overlap=0.0971",
+          "candidate is a function node",
+          "candidate graph degree=4"
+        ],
+        "code_preview": "def get_pkg_data_filename(\n    data_name, package=None, show_progress=True, remote_timeout=None\n):\n    \"\"\"\n    Retrieves a data file from the standard locations for the package and\n    provides a local filename for the data.\n\n    This function is similar to `get_pkg_data_fileobj` but returns the\n   "
+      },
+      {
+        "rank": 3,
+        "node_id": "12291",
+        "score": 0.3888,
+        "entity_name": "fitsopen",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/hdu/hdulist.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.4078",
+          "code overlap=0.0291",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def fitsopen(\n    name,\n    mode=\"readonly\",\n    memmap=None,\n    save_backup=False,\n    cache=True,\n    lazy_load_hdus=None,\n    ignore_missing_simple=False,\n    *,\n    use_fsspec=None,\n    fsspec_kwargs=None,\n    decompress_in_memory=False,\n    **kwargs,\n):\n    \"\"\"Factory function to open a FITS f"
+      },
+      {
+        "rank": 4,
+        "node_id": "17382",
+        "score": 0.3805,
+        "entity_name": "find_api_page",
+        "entity_type": "function",
+        "file_path": "astropy/utils/misc.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0194",
+          "doc overlap=0.2427",
+          "code overlap=0.0874",
+          "candidate is a function node",
+          "candidate graph degree=4"
+        ],
+        "code_preview": "def find_api_page(\n    obj: object,\n    version: str | None = None,\n    openinbrowser: bool = True,\n    timeout: float | None = None,\n) -> str:\n    \"\"\"\n    Determines the URL of the API page for the specified object, and\n    optionally open that page in a web browser.\n\n    .. note::\n        You must"
+      },
+      {
+        "rank": 5,
+        "node_id": "17155",
+        "score": 0.3739,
+        "entity_name": "download_files_in_parallel",
+        "entity_type": "function",
+        "file_path": "astropy/utils/data.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0194",
+          "doc overlap=0.301",
+          "code overlap=0.0388",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def download_files_in_parallel(\n    urls,\n    cache=\"update\",\n    show_progress=True,\n    timeout=None,\n    sources=None,\n    multiprocessing_start_method=None,\n    pkgname=\"astropy\",\n):\n    \"\"\"Download multiple files in parallel from the given URLs.\n\n    Blocks until all files have downloaded.  The"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "14505",
+      "score": 0.3905,
+      "entity_name": "transform_to",
+      "entity_type": "function",
+      "file_path": "astropy/coordinates/sky_coordinate.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0097",
+        "doc overlap=0.3204",
+        "code overlap=0.1262",
+        "candidate is a function node",
+        "candidate graph degree=3"
+      ],
+      "code_preview": "def transform_to(self, frame, merge_attributes=True):\n        \"\"\"Transform this coordinate to a new frame.\n\n        The precise frame transformed to depends on ``merge_attributes``.\n        If `False`, the destination frame is used exactly as passed in.\n        But this is often not quite what one w"
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=14505)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "14505",
+          "to_node_name": "transform_to",
+          "to_node_type": "function",
+          "file_path": "astropy/coordinates/sky_coordinate.py",
+          "reward": -0.0026148665611528538
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "12291",
+          "retrieval_score": 0.9898977112024746,
+          "base_score": 0.3888251126829745
+        },
+        {
+          "node_id": "11527",
+          "retrieval_score": 0.8383955463044886,
+          "base_score": 0.3502317333178064
+        },
+        {
+          "node_id": "12249",
+          "retrieval_score": 0.5301628244227943,
+          "base_score": 0.3409239735231912
+        },
+        {
+          "node_id": "11072",
+          "retrieval_score": 0.5195196433349101,
+          "base_score": 0.3584248842872563
+        },
+        {
+          "node_id": "14505",
+          "retrieval_score": 0.49491812685247505,
+          "base_score": 0.39047974928781676
+        },
+        {
+          "node_id": "17136",
+          "retrieval_score": 0.4667149160277904,
+          "base_score": 0.36958049425991807
+        },
+        {
+          "node_id": "17135",
+          "retrieval_score": 0.46356049692166423,
+          "base_score": 0.38887056582109986
+        },
+        {
+          "node_id": "17382",
+          "retrieval_score": 0.4202097785856821,
+          "base_score": 0.38050524446464207
+        },
+        {
+          "node_id": "17128",
+          "retrieval_score": 0.40631934630719047,
+          "base_score": 0.1975366244343788
+        },
+        {
+          "node_id": "17155",
+          "retrieval_score": 0.4002354316318791,
+          "base_score": 0.37388938093642804
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "14505",
+          0.39047974928781676
+        ],
+        [
+          "17135",
+          0.38887056582109986
+        ],
+        [
+          "12291",
+          0.3888251126829745
+        ],
+        [
+          "17382",
+          0.38050524446464207
+        ],
+        [
+          "17155",
+          0.37388938093642804
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 7,
+    "issue_preview": "Allow FilePathField path to accept a callable.\nDescription\n\t\nI have a special case where I want to create a model containing the path to some local fi",
+    "oracle_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/utils/tests/test_data.py",
+    "primary_entity": "test_download_file_local_cache_survives",
+    "primary_score": 0.371,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=17557)",
+    "runtime_sec": 0.810784101486206,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "17557",
+        "score": 0.371,
+        "entity_name": "test_download_file_local_cache_survives",
+        "entity_type": "function",
+        "file_path": "astropy/utils/tests/test_data.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0241",
+          "doc overlap=0.1687",
+          "code overlap=0.1325",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def test_download_file_local_cache_survives(tmp_path, temp_cache, use_cache):\n    \"\"\"Confirm that downloading a local file does not delete it.\n\n    When implemented with urlretrieve (rather than urlopen) local files are\n    not copied to create temporaries, so importing them to the cache deleted\n   "
+      },
+      {
+        "rank": 2,
+        "node_id": "16380",
+        "score": 0.3445,
+        "entity_name": "get_include",
+        "entity_type": "function",
+        "file_path": "astropy/wcs/__init__.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.012",
+          "doc overlap=0.0361",
+          "code overlap=0.0964",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def get_include():\n    \"\"\"\n    Get the path to astropy.wcs's C header files.\n    \"\"\"\n    import os\n\n    return os.path.join(os.path.dirname(__file__), \"include\")"
+      },
+      {
+        "rank": 3,
+        "node_id": "17509",
+        "score": 0.3407,
+        "entity_name": "test_skip_hidden",
+        "entity_type": "function",
+        "file_path": "astropy/utils/tests/test_misc.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "code overlap=0.0964",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def test_skip_hidden():\n    path = data.get_pkg_data_path(\"data\")\n    for _, _, files in os.walk(path):\n        assert \".hidden_file.txt\" in files\n        assert \"local.dat\" in files\n        # break after the first level since the data dir contains some other\n        # subdirectories that don't have"
+      },
+      {
+        "rank": 4,
+        "node_id": "11568",
+        "score": 0.3407,
+        "entity_name": "temp",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/tests/conftest.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.0602",
+          "code overlap=0.1084",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def temp(self, filename):\n        \"\"\"Returns the full path to a file in the test temp dir.\"\"\"\n        real_target = os.path.join(self.temp_dir, filename)\n        if self.home_is_temp:\n            prefix = \"~\"\n            # Record the '~' path and the intended path, for use\n            # in `home_is_"
+      },
+      {
+        "rank": 5,
+        "node_id": "11567",
+        "score": 0.3244,
+        "entity_name": "data",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/tests/conftest.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.0482",
+          "code overlap=0.0843",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def data(self, filename):\n        \"\"\"Returns the path to a test data file.\"\"\"\n        if self.home_is_data:\n            prefix = \"~\"\n        else:\n            prefix = self.data_dir\n\n        if self.use_pathlib:\n            return pathlib.Path(prefix, filename)\n        return os.path.join(prefix, fi"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "17557",
+      "score": 0.371,
+      "entity_name": "test_download_file_local_cache_survives",
+      "entity_type": "function",
+      "file_path": "astropy/utils/tests/test_data.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "name overlap=0.0241",
+        "doc overlap=0.1687",
+        "code overlap=0.1325",
+        "candidate is a function node",
+        "candidate graph degree=3"
+      ],
+      "code_preview": "def test_download_file_local_cache_survives(tmp_path, temp_cache, use_cache):\n    \"\"\"Confirm that downloading a local file does not delete it.\n\n    When implemented with urlretrieve (rather than urlopen) local files are\n    not copied to create temporaries, so importing them to the cache deleted\n   "
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=17557)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "17557",
+          "to_node_name": "test_download_file_local_cache_survives",
+          "to_node_type": "function",
+          "file_path": "astropy/utils/tests/test_data.py",
+          "reward": -0.007411931785706094
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "16380",
+          "retrieval_score": 1.0566666666666666,
+          "base_score": 0.34448895582329314
+        },
+        {
+          "node_id": "11568",
+          "retrieval_score": 0.8309212708309304,
+          "base_score": 0.3406525498430624
+        },
+        {
+          "node_id": "17509",
+          "retrieval_score": 0.6425029304558373,
+          "base_score": 0.3407011274782634
+        },
+        {
+          "node_id": "17557",
+          "retrieval_score": 0.4581088273538017,
+          "base_score": 0.3710310339368571
+        },
+        {
+          "node_id": "12377",
+          "retrieval_score": 0.3796274425685955,
+          "base_score": 0.07292442100397392
+        },
+        {
+          "node_id": "11563",
+          "retrieval_score": 0.3744831800882744,
+          "base_score": 0.20659099516485746
+        },
+        {
+          "node_id": "4407",
+          "retrieval_score": 0.3629135363558933,
+          "base_score": 0.20244633238480095
+        },
+        {
+          "node_id": "11567",
+          "retrieval_score": 0.3481348171581587,
+          "base_score": 0.3243660210313636
+        },
+        {
+          "node_id": "11564",
+          "retrieval_score": 0.3375930246060357,
+          "base_score": 0.31446392200069306
+        },
+        {
+          "node_id": "4474",
+          "retrieval_score": 0.32710685719664584,
+          "base_score": 0.3220330931166631
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "17557",
+          0.3710310339368571
+        ],
+        [
+          "16380",
+          0.34448895582329314
+        ],
+        [
+          "17509",
+          0.3407011274782634
+        ],
+        [
+          "11568",
+          0.3406525498430624
+        ],
+        [
+          "11567",
+          0.3243660210313636
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 8,
+    "issue_preview": "Incorrect removal of order_by clause created as multiline RawSQL\nDescription\n\t\nHi.\nThe SQLCompiler is ripping off one of my \"order by\" clause, because",
+    "oracle_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/io/misc/pyarrow/csv.py",
+    "primary_entity": "read_csv",
+    "primary_score": 0.3934,
+    "navigation_steps": 1,
+    "early_stop_reason": "early stop: high confidence top-1 match (node_id=10538)",
+    "runtime_sec": 1.6828956604003906,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "10538",
+        "score": 0.3934,
+        "entity_name": "read_csv",
+        "entity_type": "function",
+        "file_path": "astropy/io/misc/pyarrow/csv.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.2614",
+          "code overlap=0.0057",
+          "candidate is a function node",
+          "candidate graph degree=7"
+        ],
+        "code_preview": "def read_csv(\n    input_file: os.PathLike[str] | str | BinaryIO,\n    *,\n    delimiter: str = \",\",\n    quotechar: str | Literal[False] = '\"',\n    doublequote: bool = True,\n    escapechar: str | bool = False,\n    header_start: int | None = 0,\n    data_start: int | None = None,\n    names: list[str] | N"
+      },
+      {
+        "rank": 2,
+        "node_id": "10817",
+        "score": 0.3854,
+        "entity_name": "append",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/header.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.1761",
+          "code overlap=0.0739",
+          "candidate is a function node",
+          "candidate graph degree=6"
+        ],
+        "code_preview": "def append(self, card=None, useblanks=True, bottom=False, end=False):\n        \"\"\"\n        Appends a new keyword+value card to the end of the Header, similar\n        to `list.append`.\n\n        By default if the last cards in the Header have commentary keywords,\n        this will append the new keywor"
+      },
+      {
+        "rank": 3,
+        "node_id": "4732",
+        "score": 0.3578,
+        "entity_name": "without_units_for_data",
+        "entity_type": "function",
+        "file_path": "astropy/modeling/core.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0114",
+          "doc overlap=0.1477",
+          "code overlap=0.0568",
+          "candidate is a function node",
+          "candidate graph degree=3"
+        ],
+        "code_preview": "def without_units_for_data(self, **kwargs):\n        r\"\"\"\n        See `~astropy.modeling.Model.without_units_for_data` for overview\n        of this method.\n\n        Notes\n        -----\n        This modifies the behavior of the base method to account for the\n        case where the sub-models of a comp"
+      },
+      {
+        "rank": 4,
+        "node_id": "768",
+        "score": 0.35,
+        "entity_name": "test_group_stable_sort",
+        "entity_type": "function",
+        "file_path": "astropy/table/tests/test_groups.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.0852",
+          "code overlap=0.0909",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def test_group_stable_sort(add_index, a):\n    \"\"\"Test that group_by preserves the order of the table.\n\n    This table has 5 groups with an average of 200 rows per group, so it is not\n    statistically possible that the groups will be in order by chance.\n\n    This tests explicitly the case where grou"
+      },
+      {
+        "rank": 5,
+        "node_id": "17361",
+        "score": 0.3485,
+        "entity_name": "print_code_line",
+        "entity_type": "function",
+        "file_path": "astropy/utils/console.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0057",
+          "doc overlap=0.1591",
+          "code overlap=0.0511",
+          "candidate is a function node",
+          "candidate graph degree=2"
+        ],
+        "code_preview": "def print_code_line(line, col=None, file=None, tabwidth=8, width=70):\n    \"\"\"\n    Prints a line of source code, highlighting a particular character\n    position in the line.  Useful for displaying the context of error\n    messages.\n\n    If the line is more than ``width`` characters, the line is trun"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "10538",
+      "score": 0.3934,
+      "entity_name": "read_csv",
+      "entity_type": "function",
+      "file_path": "astropy/io/misc/pyarrow/csv.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "doc overlap=0.2614",
+        "code overlap=0.0057",
+        "candidate is a function node",
+        "candidate graph degree=7"
+      ],
+      "code_preview": "def read_csv(\n    input_file: os.PathLike[str] | str | BinaryIO,\n    *,\n    delimiter: str = \",\",\n    quotechar: str | Literal[False] = '\"',\n    doublequote: bool = True,\n    escapechar: str | bool = False,\n    header_start: int | None = 0,\n    data_start: int | None = None,\n    names: list[str] | N"
+    },
+    "navigation_trace": {
+      "total_steps": 1,
+      "early_stop_reason": "early stop: high confidence top-1 match (node_id=10538)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "10538",
+          "to_node_name": "read_csv",
+          "to_node_type": "function",
+          "file_path": "astropy/io/misc/pyarrow/csv.py",
+          "reward": -0.0018554399103922897
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "10817",
+          "retrieval_score": 0.8651661677137092,
+          "base_score": 0.3854359723746609
+        },
+        {
+          "node_id": "10538",
+          "retrieval_score": 0.7454080787118017,
+          "base_score": 0.39340792924052226
+        },
+        {
+          "node_id": "768",
+          "retrieval_score": 0.7250295048972519,
+          "base_score": 0.3500007376224313
+        },
+        {
+          "node_id": "9602",
+          "retrieval_score": 0.6885559708949242,
+          "base_score": 0.23545253563600949
+        },
+        {
+          "node_id": "9745",
+          "retrieval_score": 0.6733275017594222,
+          "base_score": 0.20240136936216738
+        },
+        {
+          "node_id": "4732",
+          "retrieval_score": 0.4858270942205997,
+          "base_score": 0.3578274955373332
+        },
+        {
+          "node_id": "9600",
+          "retrieval_score": 0.45051813471502594,
+          "base_score": 0.3219447715496938
+        },
+        {
+          "node_id": "9591",
+          "retrieval_score": 0.3796291996226168,
+          "base_score": 0.3311384572632927
+        },
+        {
+          "node_id": "17361",
+          "retrieval_score": 0.3249672681685551,
+          "base_score": 0.34852190897694113
+        },
+        {
+          "node_id": "5251",
+          "retrieval_score": 0.3229998376896656,
+          "base_score": 0.32159772321496893
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "10538",
+          0.39340792924052226
+        ],
+        [
+          "10817",
+          0.3854359723746609
+        ],
+        [
+          "4732",
+          0.3578274955373332
+        ],
+        [
+          "768",
+          0.3500007376224313
+        ],
+        [
+          "17361",
+          0.34852190897694113
+        ]
+      ]
+    }
+  },
+  {
+    "sample_idx": 9,
+    "issue_preview": "Merging 3 or more media objects can throw unnecessary MediaOrderConflictWarnings\nDescription\n\t\nConsider the following form definition, where text-edit",
+    "oracle_files": [
+      "django/forms/widgets.py"
+    ],
+    "has_file_oracle": true,
+    "primary_file": "astropy/io/fits/column.py",
+    "primary_entity": "_convert_format",
+    "primary_score": 0.3362,
+    "navigation_steps": 8,
+    "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=397)",
+    "runtime_sec": 8.543485164642334,
+    "top_candidates": [
+      {
+        "rank": 1,
+        "node_id": "10937",
+        "score": 0.3362,
+        "entity_name": "_convert_format",
+        "entity_type": "function",
+        "file_path": "astropy/io/fits/column.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "doc overlap=0.1053",
+          "code overlap=0.1053",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def _convert_format(format, cls):\n        \"\"\"The format argument to this class's initializer may come in many\n        forms.  This uses the given column format class ``cls`` to convert\n        to a format of that type.\n\n        TODO: There should be an abc base class for column format classes\n      "
+      },
+      {
+        "rank": 2,
+        "node_id": "397",
+        "score": 0.3343,
+        "entity_name": "html_js",
+        "entity_type": "function",
+        "file_path": "astropy/table/jsviewer.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0088",
+          "code overlap=0.0088",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def html_js(self, table_id=\"table0\", sort_columns=\"[]\"):\n        return HTML_JS_SCRIPT.format(\n            display_length=self.display_length,\n            display_length_menu=self.display_length_menu,\n            tid=table_id,\n            sort_columns=sort_columns,\n        ).strip()"
+      },
+      {
+        "rank": 3,
+        "node_id": "17343",
+        "score": 0.3246,
+        "entity_name": "_update_ipython_widget",
+        "entity_type": "function",
+        "file_path": "astropy/utils/console.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "name overlap=0.0088",
+          "doc overlap=0.0614",
+          "code overlap=0.0877",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def _update_ipython_widget(self, value=None):\n        \"\"\"\n        Update the progress bar to the given value (out of a total\n        given to the constructor).\n\n        This method is for use in the IPython notebook 2+.\n        \"\"\"\n        # Create and display an empty progress bar widget,\n        #"
+      },
+      {
+        "rank": 4,
+        "node_id": "392",
+        "score": 0.3229,
+        "entity_name": "__init__",
+        "entity_type": "function",
+        "file_path": "astropy/table/jsviewer.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "code overlap=0.0789",
+          "candidate is a function node",
+          "candidate has no graph neighbors"
+        ],
+        "code_preview": "def __init__(self, use_local_files=False, display_length=50):\n        if use_local_files:\n            warn(\n                \"`use_local_files` is deprecated and has no effect; for security reasons no static versions of the required js libraries are included in astropy.\",\n                DeprecationW"
+      },
+      {
+        "rank": 5,
+        "node_id": "396",
+        "score": 0.32,
+        "entity_name": "ipynb",
+        "entity_type": "function",
+        "file_path": "astropy/table/jsviewer.py",
+        "line_number": null,
+        "verifier_verdict": true,
+        "evidence": [
+          "code overlap=0.0263",
+          "candidate is a function node",
+          "candidate graph degree=1"
+        ],
+        "code_preview": "def ipynb(self, table_id, css=None, sort_columns=\"[]\"):\n        html = f\"<style>{css if css is not None else DEFAULT_CSS_NB}</style>\"\n        html += IPYNB_JS_SCRIPT.format(\n            display_length=self.display_length,\n            display_length_menu=self.display_length_menu,\n            datatabl"
+      }
+    ],
+    "primary_result": {
+      "rank": 1,
+      "node_id": "10937",
+      "score": 0.3362,
+      "entity_name": "_convert_format",
+      "entity_type": "function",
+      "file_path": "astropy/io/fits/column.py",
+      "line_number": null,
+      "verifier_verdict": true,
+      "evidence": [
+        "doc overlap=0.1053",
+        "code overlap=0.1053",
+        "candidate is a function node",
+        "candidate graph degree=1"
+      ],
+      "code_preview": "def _convert_format(format, cls):\n        \"\"\"The format argument to this class's initializer may come in many\n        forms.  This uses the given column format class ``cls`` to convert\n        to a format of that type.\n\n        TODO: There should be an abc base class for column format classes\n      "
+    },
+    "navigation_trace": {
+      "total_steps": 8,
+      "early_stop_reason": "early stop: same node repeated consecutively 3 times (node_id=397)",
+      "path": [
+        {
+          "step": 0,
+          "action": "RETRIEVE",
+          "from_node_id": "820",
+          "from_node_name": "test_assignment_and_copy",
+          "to_node_id": "397",
+          "to_node_name": "html_js",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.016419956140350883
+        },
+        {
+          "step": 1,
+          "action": "RETRIEVE",
+          "from_node_id": "397",
+          "from_node_name": "html_js",
+          "to_node_id": "392",
+          "to_node_name": "__init__",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.01934768919160211
+        },
+        {
+          "step": 2,
+          "action": "RETRIEVE",
+          "from_node_id": "392",
+          "from_node_name": "__init__",
+          "to_node_id": "396",
+          "to_node_name": "ipynb",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.020075925189914814
+        },
+        {
+          "step": 3,
+          "action": "RETRIEVE",
+          "from_node_id": "396",
+          "from_node_name": "ipynb",
+          "to_node_id": "9787",
+          "to_node_name": "HTML",
+          "to_node_type": "class",
+          "file_path": "astropy/io/ascii/html.py",
+          "reward": -0.04359319476423823
+        },
+        {
+          "step": 4,
+          "action": "RETRIEVE",
+          "from_node_id": "9787",
+          "from_node_name": "HTML",
+          "to_node_id": "390",
+          "to_node_name": "Conf",
+          "to_node_type": "class",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.057153239023090094
+        },
+        {
+          "step": 5,
+          "action": "RETRIEVE",
+          "from_node_id": "390",
+          "from_node_name": "Conf",
+          "to_node_id": "397",
+          "to_node_name": "html_js",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.016419956140350883
+        },
+        {
+          "step": 6,
+          "action": "RETRIEVE",
+          "from_node_id": "397",
+          "from_node_name": "html_js",
+          "to_node_id": "397",
+          "to_node_name": "html_js",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.016419956140350883
+        },
+        {
+          "step": 7,
+          "action": "RETRIEVE",
+          "from_node_id": "397",
+          "from_node_name": "html_js",
+          "to_node_id": "397",
+          "to_node_name": "html_js",
+          "to_node_type": "function",
+          "file_path": "astropy/table/jsviewer.py",
+          "reward": -0.016419956140350883
+        }
+      ]
+    },
+    "reasoner_trace": {
+      "mode": "rule_only",
+      "raw_output": null,
+      "chosen_index": null,
+      "llm_reason": "",
+      "score_details": [
+        {
+          "node_id": "397",
+          "retrieval_score": 1.05,
+          "base_score": 0.3343201754385965
+        },
+        {
+          "node_id": "390",
+          "retrieval_score": 0.6718267647207479,
+          "base_score": 0.17162023052152747
+        },
+        {
+          "node_id": "392",
+          "retrieval_score": 0.5990160319682732,
+          "base_score": 0.32287013764131206
+        },
+        {
+          "node_id": "396",
+          "retrieval_score": 0.4956554090337894,
+          "base_score": 0.32002296417321313
+        },
+        {
+          "node_id": "9787",
+          "retrieval_score": 0.4161674783634226,
+          "base_score": 0.22601822204680488
+        },
+        {
+          "node_id": "11015",
+          "retrieval_score": 0.23946218275885492,
+          "base_score": 0.22203918614791873
+        },
+        {
+          "node_id": "10867",
+          "retrieval_score": 0.196609515809742,
+          "base_score": 0.2095643607022611
+        },
+        {
+          "node_id": "10937",
+          "retrieval_score": 0.19611679583254082,
+          "base_score": 0.3362187093694977
+        },
+        {
+          "node_id": "17343",
+          "retrieval_score": 0.1768631683133038,
+          "base_score": 0.3245970178043238
+        },
+        {
+          "node_id": "8629",
+          "retrieval_score": 0.1737933013580489,
+          "base_score": 0.16837992025324947
+        }
+      ],
+      "top_after_rerank": [
+        [
+          "10937",
+          0.3362187093694977
+        ],
+        [
+          "397",
+          0.3343201754385965
+        ],
+        [
+          "17343",
+          0.3245970178043238
+        ],
+        [
+          "392",
+          0.32287013764131206
+        ],
+        [
+          "396",
+          0.32002296417321313
+        ]
+      ]
+    }
+  }
+]

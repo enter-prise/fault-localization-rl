@@ -1,0 +1,13 @@
+{
+  "n_samples": 6,
+  "file_oracle_coverage": 6,
+  "top1_file_acc": 0.5,
+  "top3_file_acc": 0.8333333333333334,
+  "top5_file_acc": 0.8333333333333334,
+  "avg_steps": 7.0,
+  "avg_runtime_sec": 9.63459054629008,
+  "repos_root": "data_storage/repos",
+  "min_steps_before_stop": 3,
+  "skipped_no_oracle": 0,
+  "skipped_repo_not_found": 14
+}

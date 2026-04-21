@@ -1,0 +1,33 @@
+sample_idx,issue_preview,has_file_oracle,oracle_files,primary_file,primary_entity,primary_score,navigation_steps,early_stop_reason,runtime_sec,error
+0,"Modeling's `separability_matrix` does not compute separability correctly for nested CompoundModels
+Consider the following model:
+
+```python
+from as",True,astropy/modeling/separable.py,astropy/modeling/separable.py,separability_matrix,0.3936,6,early stop: high confidence top-1 match (node_id=5521),5.899715900421143,
+1,"Please support header rows in RestructuredText output
+### Description
+
+It would be great if the following would work:
+
+```Python
+>>> from astropy",True,astropy/io/ascii/rst.py,astropy/io/ascii/ui.py,get_writer,0.3645,8,early stop: same node repeated consecutively 3 times (node_id=9582),12.64950442314148,
+2,"ascii.qdp Table format assumes QDP commands are upper case
+### Description
+
+ascii.qdp assumes that commands in a QDP file are upper case, for example,",True,astropy/io/ascii/qdp.py,astropy/io/ascii/qdp.py,_write_table_qdp,0.3693,6,early stop: high confidence top-1 match (node_id=9826),7.961451292037964,
+3,"In v5.3, NDDataRef mask propagation fails when one of the operand does not have a mask
+### Description
+
+This applies to v5.3. 
+
+It looks like when o",True,astropy/nddata/mixins/ndarithmetic.py,astropy/nddata/bitmask.py,bitfield_to_boolean_mask,0.3937,6,early stop: high confidence top-1 match (node_id=13026),12.686557054519653,
+4,"Possible bug in io.fits related to D exponents
+I came across the following code in ``fitsrec.py``:
+
+```python
+        # Replace exponent separator ",True,astropy/io/fits/fitsrec.py,astropy/io/fits/fitsrec.py,_ascii_encode,0.3864,8,early stop: same node repeated consecutively 3 times (node_id=10902),4.676957845687866,
+5,"Issue when passing empty lists/arrays to WCS transformations
+The following should not fail but instead should return empty lists/arrays:
+
+```
+In [1",True,astropy/wcs/wcs.py,astropy/wcs/utils.py,fit_wcs_from_points,0.3814,8,early stop: same node repeated consecutively 3 times (node_id=16333),13.65010142326355,
