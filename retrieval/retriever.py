@@ -1,41 +1,55 @@
-from typing import Dict, List, Tuple, Optional, Any
+# retrieval/retriever.py
 
-from retrieval.vector_store import SimpleVectorStore
+from typing import Dict, List, Tuple, Optional, Any
+import numpy as np
 
 
 class Retriever:
     """
     混合检索器：
-    1. BM25 检索
-    2. 轻量语义检索（SimpleVectorStore）
-    3. 混合打分融合
-
-    目标：
-    - 保持和你原系统接口尽量兼容
-    - 支持：
-        retrieve(query)
-        retrieve_with_score(query, top_k=...)
-        build_index(graph)
+    1. BM25 检索 (稀疏关键词匹配)
+    2. Dense Retrieval (稠密语义检索)
 
     默认策略：
-    hybrid_score = alpha * bm25_norm + beta * semantic_norm + bonuses
+    hybrid_score = alpha * bm25_norm + beta * dense_norm + bonuses
     """
 
     def __init__(
         self,
         bm25,
-        alpha: float = 0.6,
-        beta: float = 0.4,
+        alpha: float = 0.5,
+        beta: float = 0.5,
+        use_dense: bool = False,
+        dense_model_path: str = "./dense_retriever_model",
+        dense_device: str = "cuda",
     ):
         self.bm25 = bm25
         self.alpha = alpha
         self.beta = beta
+        self.use_dense = use_dense
 
         self.graph = None
-        self.vector_store = SimpleVectorStore()
+        self.dense_retriever = None
         self.documents: Dict[str, str] = {}
         self.node_name_map: Dict[str, str] = {}
         self._built = False
+
+        # 初始化 Dense Retriever（如果启用）
+        if use_dense:
+            try:
+                from retrieval.dense_retriever import DenseRetriever
+                self.dense_retriever = DenseRetriever(
+                    model_path=dense_model_path,
+                    device=dense_device,
+                )
+                print(f"Dense retrieval enabled with local model: {dense_model_path}")
+            except ImportError as e:
+                print(f"Warning: Could not import DenseRetriever: {e}")
+                print("Falling back to BM25 only.")
+                self.use_dense = False
+            except Exception as e:
+                print(f"Warning: Failed to initialize dense retriever: {e}")
+                self.use_dense = False
 
     # ------------------------------------------------------------------
     # Helpers
@@ -86,9 +100,9 @@ class Retriever:
 
         return normalized
 
-    def _keyword_bonus(self, query: str, doc_text: str) -> float:
+    def _exact_match_bonus(self, query: str, doc_text: str) -> float:
         """
-        轻量加成：如果 query 中关键字和 name/path/doc 有明显重合，增加一点分
+        精确匹配加成：如果 query 中的词在文档中精确出现，增加分数
         """
         if not query or not doc_text:
             return 0.0
@@ -111,13 +125,24 @@ class Retriever:
         self.documents = {}
         self.node_name_map = {}
 
+        print("Building retriever index...")
         for node_id, node in graph.nodes.items():
             node_id = str(node_id)
             self.documents[node_id] = self._build_document_for_node(node)
             self.node_name_map[node_id] = self._safe_attr(node, "name", "") or ""
 
-        self.vector_store.build(self.documents)
+        # 构建 Dense 索引（如果启用）
+        if self.use_dense and self.dense_retriever:
+            print("  Building dense retrieval index...")
+            try:
+                self.dense_retriever.build(self.documents)
+                print("  Dense index built successfully")
+            except Exception as e:
+                print(f"  Warning: Failed to build dense index: {e}")
+                self.use_dense = False
+
         self._built = True
+        print(f"Retriever index built with {len(self.documents)} documents")
 
     # ------------------------------------------------------------------
     # BM25 adapters
@@ -126,11 +151,6 @@ class Retriever:
     def _bm25_search(self, query: str, top_k: int = 10) -> List[Tuple[str, float]]:
         """
         兼容不同 BM25 实现。
-
-        尝试以下可能接口：
-        1. bm25.retrieve(query, top_k=top_k)
-        2. bm25.search(query, top_k=top_k)
-        3. bm25.get_scores(query) -> Dict or List
         """
         # 1) retrieve
         if hasattr(self.bm25, "retrieve"):
@@ -170,7 +190,6 @@ class Retriever:
                     return results[:top_k]
 
                 if isinstance(raw_scores, list):
-                    # 假设顺序与 self.documents.keys() 一一对应
                     doc_ids = list(self.documents.keys())
                     results = []
                     for i, score in enumerate(raw_scores):
@@ -181,7 +200,6 @@ class Retriever:
             except Exception:
                 pass
 
-        # 兜底：没有可用 BM25 接口
         return []
 
     # ------------------------------------------------------------------
@@ -191,32 +209,41 @@ class Retriever:
     def retrieve_with_score(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
         """
         返回混合检索结果：
-            [{"entity_id": node_id, "entity_name": node_name, "entity_type": node_type, 
-            "file_path": node_path, "code_snippet": code_snippet, "match_source": "bm25"|"semantic", 
+            [{"entity_id": node_id, "entity_name": node_name, "entity_type": node_type,
+            "file_path": node_path, "code_snippet": code_snippet, "match_source": "hybrid",
             "relevance_score": score}]
         """
         if not self._built:
             raise ValueError("Retriever index not built. Call build_index(graph) first.")
 
+        # 1. BM25 检索
         bm25_results = self._bm25_search(query, top_k=max(top_k * 3, 20))
-        semantic_results = self.vector_store.search(query, top_k=max(top_k * 3, 20))
-
         bm25_norm = self._normalize_scores(bm25_results)
-        semantic_norm = self._normalize_scores(semantic_results)
 
-        all_doc_ids = set(bm25_norm.keys()) | set(semantic_norm.keys())
+        # 2. Dense 检索（如果启用）
+        dense_norm = {}
+        if self.use_dense and self.dense_retriever:
+            try:
+                dense_results = self.dense_retriever.search(query, top_k=max(top_k * 3, 20))
+                dense_norm = self._normalize_scores(dense_results)
+            except Exception as e:
+                print(f"Warning: Dense retrieval failed: {e}")
+
+        # 3. 融合结果
+        all_doc_ids = set(bm25_norm.keys()) | set(dense_norm.keys())
         fused_results = []
 
         for doc_id in all_doc_ids:
             bm25_score = bm25_norm.get(doc_id, 0.0)
-            semantic_score = semantic_norm.get(doc_id, 0.0)
+            dense_score = dense_norm.get(doc_id, 0.0)
 
-            hybrid_score = self.alpha * bm25_score + self.beta * semantic_score
+            # 混合分数
+            hybrid_score = self.alpha * bm25_score + self.beta * dense_score
 
             doc_text = self.documents.get(doc_id, "")
-            hybrid_score += self._keyword_bonus(query, doc_text)
+            hybrid_score += self._exact_match_bonus(query, doc_text)
 
-            # 修复：使用 getattr 而不是 .get()，因为 node 是对象
+            # 节点类型加成
             node = self.graph.nodes.get(doc_id)
             if node is not None:
                 node_type = getattr(node, "type", "")
@@ -226,8 +253,7 @@ class Retriever:
                     hybrid_score += 0.03
                 elif node_type == "file":
                     hybrid_score += 0.01
-                
-                # 修复：使用 getattr 获取属性
+
                 file_path = getattr(node, "file_path", "")
                 code = getattr(node, "code", "")
                 code_snippet = str(code)[:400] if code else ""
@@ -265,20 +291,25 @@ class Retriever:
             raise ValueError("Retriever index not built. Call build_index(graph) first.")
 
         bm25_results = self._bm25_search(query, top_k=max(top_k * 3, 20))
-        semantic_results = self.vector_store.search(query, top_k=max(top_k * 3, 20))
-
         bm25_norm = self._normalize_scores(bm25_results)
-        semantic_norm = self._normalize_scores(semantic_results)
 
-        all_doc_ids = set(bm25_norm.keys()) | set(semantic_norm.keys())
+        dense_norm = {}
+        if self.use_dense and self.dense_retriever:
+            try:
+                dense_results = self.dense_retriever.search(query, top_k=max(top_k * 3, 20))
+                dense_norm = self._normalize_scores(dense_results)
+            except Exception:
+                pass
+
+        all_doc_ids = set(bm25_norm.keys()) | set(dense_norm.keys())
         detailed = []
 
         for doc_id in all_doc_ids:
             bm25_score = bm25_norm.get(doc_id, 0.0)
-            semantic_score = semantic_norm.get(doc_id, 0.0)
+            dense_score = dense_norm.get(doc_id, 0.0)
             doc_text = self.documents.get(doc_id, "")
 
-            keyword_bonus = self._keyword_bonus(query, doc_text)
+            exact_bonus = self._exact_match_bonus(query, doc_text)
 
             type_bonus = 0.0
             node_name = ""
@@ -287,7 +318,6 @@ class Retriever:
 
             if self.graph is not None and doc_id in self.graph.nodes:
                 node = self.graph.nodes[doc_id]
-                # 修复：使用 getattr 而不是 .get()
                 node_name = self._safe_attr(node, "name", "")
                 node_type = self._safe_attr(node, "type", "")
                 node_path = self._safe_attr(node, "file_path", "")
@@ -299,7 +329,12 @@ class Retriever:
                 elif node_type == "file":
                     type_bonus = 0.01
 
-            hybrid_score = self.alpha * bm25_score + self.beta * semantic_score + keyword_bonus + type_bonus
+            hybrid_score = (
+                self.alpha * bm25_score +
+                self.beta * dense_score +
+                exact_bonus +
+                type_bonus
+            )
 
             detailed.append({
                 "node_id": doc_id,
@@ -307,11 +342,32 @@ class Retriever:
                 "node_type": node_type,
                 "file_path": node_path,
                 "bm25_score": round(float(bm25_score), 4),
-                "semantic_score": round(float(semantic_score), 4),
-                "keyword_bonus": round(float(keyword_bonus), 4),
+                "dense_score": round(float(dense_score), 4) if self.use_dense else 0.0,
+                "exact_bonus": round(float(exact_bonus), 4),
                 "type_bonus": round(float(type_bonus), 4),
                 "hybrid_score": round(float(hybrid_score), 4),
             })
 
         detailed.sort(key=lambda x: x["hybrid_score"], reverse=True)
         return detailed[:top_k]
+
+    def enable_dense(self, model_path: str = "./dense_retriever_model", device: str = "cuda"):
+        """动态启用 dense retrieval"""
+        if self.use_dense:
+            print("Dense retrieval already enabled")
+            return
+
+        try:
+            from retrieval.dense_retriever import DenseRetriever
+            self.dense_retriever = DenseRetriever(model_path=model_path, device=device)
+            self.use_dense = True
+            self.beta = 0.5
+            self.alpha = 0.5
+
+            if self._built and self.documents:
+                print("Rebuilding dense index...")
+                self.dense_retriever.build(self.documents)
+
+            print(f"Dense retrieval enabled with local model: {model_path}")
+        except Exception as e:
+            print(f"Failed to enable dense retrieval: {e}")

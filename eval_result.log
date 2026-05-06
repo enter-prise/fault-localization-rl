@@ -1,0 +1,263 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+Loaded 35 samples from test split
+Building graph from data_storage/repos/astropy...
+Creating retriever (use_dense=True)
+Using local model from: ./dense_retriever_model
+Dense retrieval enabled with local model: ./dense_retriever_model
+Building retriever index...
+Retriever index built with 19545 documents
+Warning: Model file best_model_optimized.zip not found
+
+============================================================
+EXPERIMENT 1: Fault Localization Accuracy
+============================================================
+
+--- BM25 Only ---
+
+Evaluating sample 1/35...
+  ❌ Predicted: separability_matrix, Steps: 20
+
+Evaluating sample 2/35...
+  ✅ Predicted: get_writer, Steps: 20
+
+Evaluating sample 3/35...
+  ✅ Predicted: _write_table_qdp, Steps: 20
+
+Evaluating sample 4/35...
+  ✅ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 5/35...
+  ❌ Predicted: canonical, Steps: 20
+
+Evaluating sample 6/35...
+  ✅ Predicted: _array_converter, Steps: 20
+
+Evaluating sample 7/35...
+  ❌ Predicted: get_readable_fileobj, Steps: 20
+
+Evaluating sample 8/35...
+  ❌ Predicted: test_line_endings, Steps: 20
+
+Evaluating sample 9/35...
+  ❌ Predicted: download_files_in_parallel, Steps: 20
+
+Evaluating sample 10/35...
+  ❌ Predicted: test_download_file_threaded_many_partial_success, Steps: 20
+
+Evaluating sample 11/35...
+  ❌ Predicted: test_proper_error_raised_on_non_fits_file_with_uni, Steps: 20
+
+Evaluating sample 12/35...
+  ❌ Predicted: deprecated_renamed_argument, Steps: 20
+
+Evaluating sample 13/35...
+  ❌ Predicted: extirpolate, Steps: 20
+
+Evaluating sample 14/35...
+  ❌ Predicted: _line_type, Steps: 20
+
+Evaluating sample 15/35...
+  ❌ Predicted: from_df, Steps: 20
+
+Evaluating sample 16/35...
+  ❌ Predicted: custom_model, Steps: 20
+
+Evaluating sample 17/35...
+  ❌ Predicted: reasonable_jd, Steps: 20
+
+Evaluating sample 18/35...
+  ❌ Predicted: convolve_fft, Steps: 20
+
+Evaluating sample 19/35...
+  ❌ Predicted: test_rows_equal, Steps: 20
+
+Evaluating sample 20/35...
+  ❌ Predicted: test_tabular_interp_2d, Steps: 20
+
+Evaluating sample 21/35...
+  ❌ Predicted: test_from_df_simple, Steps: 20
+
+Evaluating sample 22/35...
+  ❌ Predicted: validate, Steps: 20
+
+Evaluating sample 23/35...
+  ❌ Predicted: get_auto_format_func, Steps: 20
+
+Evaluating sample 24/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 25/35...
+  ✅ Predicted: test_linear_fit_model_set_common_weight, Steps: 20
+
+Evaluating sample 26/35...
+  ❌ Predicted: akaike_info_criterion_lsq, Steps: 20
+
+Evaluating sample 27/35...
+  ❌ Predicted: custom_model, Steps: 20
+
+Evaluating sample 28/35...
+  ❌ Predicted: akaike_info_criterion_lsq, Steps: 20
+
+Evaluating sample 29/35...
+  ❌ Predicted: test_representation_repr_multi_d, Steps: 20
+
+Evaluating sample 30/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 31/35...
+  ❌ Predicted: binned_binom_proportion, Steps: 20
+
+Evaluating sample 32/35...
+  ✅ Predicted: test_fitter_kwargs, Steps: 20
+
+Evaluating sample 33/35...
+  ❌ Predicted: test_from_df_simple, Steps: 20
+
+Evaluating sample 34/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 35/35...
+  ❌ Predicted: to_pandas, Steps: 20
+  Accuracy: 17.14%
+  Top-3 Accuracy: 0.00%
+  Avg Steps: 20.0
+
+--- RL (Ours) ---
+
+Evaluating sample 1/35...
+  ❌ Predicted: separability_matrix, Steps: 20
+
+Evaluating sample 2/35...
+  ✅ Predicted: get_writer, Steps: 20
+
+Evaluating sample 3/35...
+  ✅ Predicted: _write_table_qdp, Steps: 20
+
+Evaluating sample 4/35...
+  ✅ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 5/35...
+  ❌ Predicted: canonical, Steps: 20
+
+Evaluating sample 6/35...
+  ✅ Predicted: _array_converter, Steps: 20
+
+Evaluating sample 7/35...
+  ❌ Predicted: get_readable_fileobj, Steps: 20
+
+Evaluating sample 8/35...
+  ❌ Predicted: test_line_endings, Steps: 20
+
+Evaluating sample 9/35...
+  ❌ Predicted: download_files_in_parallel, Steps: 20
+
+Evaluating sample 10/35...
+  ❌ Predicted: test_download_file_threaded_many_partial_success, Steps: 20
+
+Evaluating sample 11/35...
+  ❌ Predicted: test_proper_error_raised_on_non_fits_file_with_uni, Steps: 20
+
+Evaluating sample 12/35...
+  ❌ Predicted: deprecated_renamed_argument, Steps: 20
+
+Evaluating sample 13/35...
+  ❌ Predicted: extirpolate, Steps: 20
+
+Evaluating sample 14/35...
+  ❌ Predicted: _line_type, Steps: 20
+
+Evaluating sample 15/35...
+  ❌ Predicted: from_df, Steps: 20
+
+Evaluating sample 16/35...
+  ❌ Predicted: custom_model, Steps: 20
+
+Evaluating sample 17/35...
+  ❌ Predicted: reasonable_jd, Steps: 20
+
+Evaluating sample 18/35...
+  ❌ Predicted: convolve_fft, Steps: 20
+
+Evaluating sample 19/35...
+  ❌ Predicted: test_rows_equal, Steps: 20
+
+Evaluating sample 20/35...
+  ❌ Predicted: test_tabular_interp_2d, Steps: 20
+
+Evaluating sample 21/35...
+  ❌ Predicted: test_from_df_simple, Steps: 20
+
+Evaluating sample 22/35...
+  ❌ Predicted: validate, Steps: 20
+
+Evaluating sample 23/35...
+  ❌ Predicted: get_auto_format_func, Steps: 20
+
+Evaluating sample 24/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 25/35...
+  ✅ Predicted: test_linear_fit_model_set_common_weight, Steps: 20
+
+Evaluating sample 26/35...
+  ❌ Predicted: akaike_info_criterion_lsq, Steps: 20
+
+Evaluating sample 27/35...
+  ❌ Predicted: custom_model, Steps: 20
+
+Evaluating sample 28/35...
+  ❌ Predicted: akaike_info_criterion_lsq, Steps: 20
+
+Evaluating sample 29/35...
+  ❌ Predicted: test_representation_repr_multi_d, Steps: 20
+
+Evaluating sample 30/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 31/35...
+  ❌ Predicted: binned_binom_proportion, Steps: 20
+
+Evaluating sample 32/35...
+  ✅ Predicted: test_fitter_kwargs, Steps: 20
+
+Evaluating sample 33/35...
+  ❌ Predicted: test_from_df_simple, Steps: 20
+
+Evaluating sample 34/35...
+  ❌ Predicted: bitfield_to_boolean_mask, Steps: 20
+
+Evaluating sample 35/35...
+  ❌ Predicted: to_pandas, Steps: 20
+  Accuracy: 17.14%
+  Top-3 Accuracy: 0.00%
+  Avg Steps: 20.0
+Results saved to results_accuracy.json
+
+============================================================
+SUMMARY
+============================================================
+
+ACCURACY:
+{
+  "BM25 Only": {
+    "accuracy": 0.17142857142857143,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0,
+    "top5_accuracy": 0.0,
+    "avg_steps": 20.0,
+    "avg_time": 11.38378346306937,
+    "total_samples": 35
+  },
+  "RL (Ours)": {
+    "accuracy": 0.17142857142857143,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0,
+    "top5_accuracy": 0.0,
+    "avg_steps": 20.0,
+    "avg_time": 11.423058693749564,
+    "total_samples": 35
+  }
+}

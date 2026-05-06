@@ -17,13 +17,17 @@ class ReasonerAgent:
     - rerank(query, candidates) -> List[(node_id, score)]
     - choose_best(query, candidates) -> (node_id, score) / (None, 0.0)
     - reason(query, candidates) -> Dict
+    
+    输入 candidates 支持两种格式：
+    1. List[Tuple[str, float]]: [(node_id, score), ...]
+    2. List[Dict]: [{"entity_id": xxx, "relevance_score": xxx}, ...]
     """
 
     def __init__(
         self,
         graph,
         retriever=None,
-        model_name: str = "llama3:8b",
+        model_name: str = "qwen2.5-coder:32b",
         use_llm: bool = True,
     ):
         self.graph = graph
@@ -86,6 +90,52 @@ class ReasonerAgent:
         except Exception:
             degree = 0
         return min(degree / 20.0, 1.0) * 0.10
+
+    # ------------------------------------------------------------------
+    # Candidate normalization (关键修改)
+    # ------------------------------------------------------------------
+    
+    def _normalize_candidates(self, candidates: List[Any]) -> List[Tuple[str, float]]:
+        """
+        将不同格式的 candidates 统一转换为 (node_id, score) 元组列表
+        
+        支持格式：
+        1. List[Tuple[str, float]]: [(node_id, score), ...]
+        2. List[Dict]: [{"entity_id": xxx, "relevance_score": xxx}, ...]
+        """
+        if not candidates:
+            return []
+        
+        normalized = []
+        for item in candidates:
+            # 格式1: 字典格式
+            if isinstance(item, dict):
+                # 尝试多种可能的键名
+                node_id = item.get("entity_id") or item.get("node_id") or item.get("id")
+                # 尝试多种可能的分数键名
+                score = item.get("relevance_score") or item.get("score") or item.get("retrieval_score") or 0.5
+                if node_id:
+                    try:
+                        normalized.append((str(node_id), float(score)))
+                    except (ValueError, TypeError):
+                        normalized.append((str(node_id), 0.5))
+            # 格式2: 元组或列表格式
+            elif isinstance(item, (tuple, list)) and len(item) >= 2:
+                try:
+                    normalized.append((str(item[0]), float(item[1])))
+                except (ValueError, TypeError):
+                    normalized.append((str(item[0]), 0.5))
+            # 格式3: 只有 node_id 的字符串
+            elif isinstance(item, str):
+                normalized.append((item, 0.5))
+            else:
+                # 未知格式，尝试转换为字符串
+                try:
+                    normalized.append((str(item), 0.5))
+                except Exception:
+                    pass
+        
+        return normalized
 
     # ------------------------------------------------------------------
     # Core scoring
@@ -199,11 +249,13 @@ REASON: <short reason>
     # Main rerank logic
     # ------------------------------------------------------------------
 
-    def rerank(self, query: str, candidates: List[Tuple[str, float]]) -> List[Tuple[str, float]]:
+    def rerank(self, query: str, candidates: List[Any]) -> List[Tuple[str, float]]:
         """
         输入:
             query: bug / issue 描述
-            candidates: [(node_id, retrieval_score), ...]
+            candidates: 支持两种格式：
+                1. [(node_id, retrieval_score), ...]  # 元组列表
+                2. [{"entity_id": xxx, "relevance_score": xxx}, ...]  # 字典列表
 
         输出:
             [(node_id, fused_score), ...]  按降序排列
@@ -218,10 +270,23 @@ REASON: <short reason>
             }
             return []
 
+        # 关键修改：统一转换为标准格式
+        normalized_candidates = self._normalize_candidates(candidates)
+        
+        if not normalized_candidates:
+            self.last_trace = {
+                "mode": "normalization_failed",
+                "raw_output": None,
+                "chosen_index": None,
+                "llm_reason": "Failed to normalize candidates",
+                "top_after_rerank": [],
+            }
+            return []
+
         rescored = []
         score_details = []
 
-        for node_id, retrieval_score in candidates:
+        for node_id, retrieval_score in normalized_candidates:
             try:
                 base_score = self.score_candidate(query, node_id, retrieval_score)
                 rescored.append((node_id, base_score))
@@ -283,11 +348,13 @@ REASON: <short reason>
 
         return rescored
 
-    def choose_best(self, query: str, candidates: List[Tuple[str, float]]):
+    def choose_best(self, query: str, candidates: List[Any]):
         """
         返回:
             (node_id, score)
             若为空则返回 (None, 0.0)
+            
+        支持两种 candidates 格式
         """
         if not candidates:
             return None, 0.0
@@ -302,7 +369,7 @@ REASON: <short reason>
     # Compatibility API for env / pipeline
     # ------------------------------------------------------------------
 
-    def reason(self, query: str, candidates: List[Tuple[str, float]]) -> Dict:
+    def reason(self, query: str, candidates: List[Any]) -> Dict:
         """
         提供给 rl_env 或主流程调用的统一接口。
 
@@ -313,6 +380,8 @@ REASON: <short reason>
             "ranked_candidates": [...],
             "trace": {...}
         }
+        
+        支持两种 candidates 格式
         """
         reranked = self.rerank(query, candidates)
 

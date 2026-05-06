@@ -1,0 +1,20 @@
+{
+  "BM25 Only": {
+    "accuracy": 0.17142857142857143,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0,
+    "top5_accuracy": 0.0,
+    "avg_steps": 20.0,
+    "avg_time": 11.38378346306937,
+    "total_samples": 35
+  },
+  "RL (Ours)": {
+    "accuracy": 0.17142857142857143,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0,
+    "top5_accuracy": 0.0,
+    "avg_steps": 20.0,
+    "avg_time": 11.423058693749564,
+    "total_samples": 35
+  }
+}

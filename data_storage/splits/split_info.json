@@ -1,0 +1,30 @@
+{
+  "train": {
+    "repos": [
+      "matplotlib/matplotlib",
+      "django/django",
+      "sympy/sympy",
+      "pallets/flask",
+      "pylint-dev/pylint",
+      "mwaskom/seaborn",
+      "pydata/xarray"
+    ],
+    "samples": 232
+  },
+  "val": {
+    "repos": [
+      "sphinx-doc/sphinx",
+      "pytest-dev/pytest"
+    ],
+    "samples": 33
+  },
+  "test": {
+    "repos": [
+      "scikit-learn/scikit-learn",
+      "psf/requests",
+      "astropy/astropy"
+    ],
+    "samples": 35
+  },
+  "total": 300
+}

@@ -18,7 +18,7 @@ class VerifierAgent:
     def __init__(
         self,
         graph,
-        model_name: str = "llama3",
+        model_name: str = "qwen2.5-coder:32b",
         use_llm: bool = True,
     ):
         self.graph = graph

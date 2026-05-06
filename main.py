@@ -1,6 +1,7 @@
 import argparse
 import json
 import uuid
+import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -32,7 +33,13 @@ def load_swebench_sample(sample_idx: int, parquet_path: str) -> Dict[str, Any]:
     return dict(sample)
 
 
-def build_graph_and_retriever(repo_path: str):
+def build_graph_and_retriever(
+    repo_path: str,
+    use_dense: bool = False,
+    dense_model_path: str = "./dense_retriever_model",
+    alpha: float = 0.5,
+    beta: float = 0.5,
+):
     print(f"Building graph from {repo_path}...")
     builder = GraphBuilder()
     graph = builder.build_from_repo(repo_path)
@@ -46,18 +53,25 @@ def build_graph_and_retriever(repo_path: str):
         corpus[node_id] = f"{name} {doc} {file_path} {str(code)[:300]}".strip()
 
     bm25 = SimpleBM25(corpus)
-    retriever = Retriever(bm25)
+    
+    # 创建检索器（BM25 + Dense，可选）
+    retriever = Retriever(
+        bm25,
+        alpha=alpha,
+        beta=beta,
+        use_dense=use_dense,
+        dense_model_path=dense_model_path if use_dense else None,
+    )
 
-    # 如果你的 Retriever 有 build_index(graph)，就用；否则忽略
     try:
         retriever.build_index(graph)
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"Warning: Failed to build index: {e}")
 
     return graph, retriever
 
 
-def retrieve_candidates(retriever, graph, query: str, top_k: int = 10) -> List[Tuple[str, float]]:
+def retrieve_candidates(retriever, graph, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
     """
     兼容不同 retriever.retrieve_with_score 接口：
     1) retrieve_with_score(query, top_k=top_k)
@@ -113,17 +127,32 @@ def train_mode(args):
     print("Starting TRAINING mode")
     print("=" * 60)
 
-    sample = load_swebench_sample(args.sample_idx, args.data_path)
+    if args.split == "train":
+        data_path = "data_storage/splits/train.parquet"
+    elif args.split == "val":
+        data_path = "data_storage/splits/val.parquet"
+    else:
+        data_path = args.data_path
+
+    print(f"Loading {args.split} split from {data_path}")
+    sample = load_swebench_sample(args.sample_idx, data_path)
     issue = sample.get("problem_statement", "")
     repo_path = args.repo_path
 
     print(f"Training sample_idx={args.sample_idx}")
     print(f"Issue preview: {issue[:120]}")
 
-    graph, retriever = build_graph_and_retriever(repo_path)
+    graph, retriever = build_graph_and_retriever(
+        repo_path=repo_path,
+        use_dense=args.use_dense,
+        dense_model_path=args.dense_model_path,
+        alpha=args.retriever_alpha,
+        beta=args.retriever_beta,
+    )
 
-    verifier = VerifierAgent(graph, use_llm=args.use_llm)
-    reasoner = ReasonerAgent(graph, retriever, use_llm=args.use_llm)
+
+    reasoner = ReasonerAgent(graph, retriever, model_name=args.llm_model, use_llm=args.use_llm)
+    verifier = VerifierAgent(graph, model_name=args.llm_model, use_llm=args.use_llm)
 
     env = FaultLocalizationEnv(
         graph=graph,
@@ -138,28 +167,25 @@ def train_mode(args):
         seed=args.seed,
     )
     
-    # 打印环境信息确认
-    print(f"Observation space: {env.observation_space}")  # 应该是 (32,)
-    print(f"Action space: {env.action_space}")  # 应该是 MultiDiscrete
+    print(f"Observation space: {env.observation_space}")
+    print(f"Action space: {env.action_space}")
 
     print("Starting PPO training...")
     
-    # 对于 MultiDiscrete 动作空间，使用 MultiInputPolicy 或 MlpPolicy
-    # PPO 会自动处理 MultiDiscrete
     model = PPO(
-        "MlpPolicy",  # MlpPolicy 可以处理 Box 观察空间和 MultiDiscrete 动作空间
+        "MlpPolicy",
         env,
         verbose=1,
         learning_rate=args.learning_rate,
         ent_coef=args.ent_coef,
         batch_size=args.batch_size,
-        n_steps=args.n_steps if hasattr(args, 'n_steps') else 2048,
-        n_epochs=args.n_epochs if hasattr(args, 'n_epochs') else 10,
-        gamma=args.gamma if hasattr(args, 'gamma') else 0.99,
+        n_steps=args.n_steps,
+        n_epochs=args.n_epochs,
+        gamma=args.gamma,
         device=args.device,
         tensorboard_log=args.tensorboard_log,
         policy_kwargs=dict(
-            net_arch=[128, 128],  # 对于 32 维输入，使用更大的网络
+            net_arch=[128, 128],
         )
     )
 
@@ -175,18 +201,9 @@ def train_mode(args):
 # ----------------------------------------------------------------------
 
 def inference_mode(args):
+    start_time = time.time()
     """
     推理模式
-    输入：
-        - repo
-        - issue text
-        - trained PPO model（可选但建议有）
-
-    输出：
-        - 导航轨迹
-        - top-k 候选
-        - verifier 验证
-        - 最终 fault report
     """
     print("=" * 60)
     print("Starting INFERENCE mode")
@@ -203,7 +220,14 @@ def inference_mode(args):
     repo_path = args.repo_path
 
     print(f"Issue preview: {issue[:150]}")
-    graph, retriever = build_graph_and_retriever(repo_path)
+
+    graph, retriever = build_graph_and_retriever(
+        repo_path=repo_path,
+        use_dense=args.use_dense,
+        dense_model_path=args.dense_model_path,
+        alpha=args.retriever_alpha,
+        beta=args.retriever_beta,
+    )
 
     verifier = VerifierAgent(graph, use_llm=args.use_llm)
     reasoner = ReasonerAgent(graph, retriever, use_llm=args.use_llm)
@@ -213,7 +237,6 @@ def inference_mode(args):
         print(f"Loading model from {args.model_path}...")
         model = PPO.load(args.model_path)
 
-    # 推理模式里不依赖真实 oracle bug_node，这里只是复用导航机制
     env = FaultLocalizationEnv(
         graph=graph,
         retriever=retriever,
@@ -225,6 +248,7 @@ def inference_mode(args):
         reasoner=reasoner,
         verifier=verifier,
         seed=args.seed,
+        auto_terminate_on_exact_hit=False,
     )
 
     obs, info = env.reset()
@@ -234,34 +258,27 @@ def inference_mode(args):
 
     print("\nStarting navigation...")
 
-    # ========== 提前停止控制 ==========
-    last_node_id = None
-    consecutive_same_node = 0
-    node_visit_counter = {}
-    early_stop_reason = None
-
-    # 可调阈值
-    max_consecutive_same_node = 3   # 连续3次落到同一个节点就停
-    max_total_visits_per_node = 5   # 同一节点累计访问5次就停
-    # =================================
-
-    print("\nStarting navigation...")
+# 注释掉整个早停控制块
+# ========== 提前停止控制 ==========
+# last_node_id = None
+# consecutive_same_node = 0
+# node_visit_counter = {}
+# early_stop_reason = None
+# max_consecutive_same_node = 3
+# max_total_visits_per_node = 5
+# =================================
     
-    # 动作名称映射
     action_names = ["JUMP", "CALL", "EXPAND", "SUBMIT"]
     
     while not done:
         if model is not None:
             action, _ = model.predict(obs, deterministic=True)
-            # action 已经是 numpy 数组格式
         else:
-            # 没有模型时的简单 fallback
             if step_num < max(args.max_steps - 1, 1):
-                action = np.array([1, 0, 0, 0, 0])  # CALL
+                action = np.array([1, 0, 0, 0, 0])
             else:
-                action = np.array([3, 0, 0, 0, 0])  # SUBMIT
+                action = np.array([3, 0, 0, 0, 0])
         
-        # 获取动作类型（第一个元素）
         if isinstance(action, np.ndarray):
             action_type = int(action[0])
             action_details = action.tolist()
@@ -294,19 +311,13 @@ def inference_mode(args):
         }
         trace.append(trace_item)
         
-        print(
-            f"  Step {step_num}: {action_name} -> "
-            f"{trace_item['to_node_name']} ({trace_item['to_node_type']}) "
-            f"reward={reward:.3f}"
-        )
+        print(f"  Step {step_num}: {action_name} -> {trace_item['to_node_name']} ({trace_item['to_node_type']}) reward={reward:.3f}")
         
         step_num += 1
         if step_num >= args.max_steps:
             break
 
-    # ----------------------------------------------------------
     # 生成 top-k 候选
-    # ----------------------------------------------------------
     retrieval_results = retrieve_candidates(
         retriever=retriever,
         graph=graph,
@@ -319,63 +330,125 @@ def inference_mode(args):
     candidate_reports = []
     for rank, (node_id, score) in enumerate(reranked[: args.final_top_k], start=1):
         verify_result = verifier.debate(issue, node_id)
-        candidate_reports.append(
-            serialize_candidate(
-                graph=graph,
-                node_id=node_id,
-                score=score,
-                rank=rank,
-                verifier_result=verify_result,
-            )
-        )
+        
+        node = graph.nodes.get(node_id)
+        node_name = safe_attr(node, "name", "unknown")
+        node_type = safe_attr(node, "type", "unknown")
+        
+        line_start = getattr(node, "lineno", None) or getattr(node, "line_number", None)
+        line_end = getattr(node, "end_lineno", None) or getattr(node, "end_line_number", None) or line_start
+                
+        class_name = None
+        function_name = None
+        if node_type == "method":
+            function_name = node_name
+            for neighbor in graph.get_neighbors(node_id, edge_type="contains"):
+                neighbor_node = graph.nodes.get(neighbor)
+                if neighbor_node and safe_attr(neighbor_node, "type", "") == "class":
+                    class_name = safe_attr(neighbor_node, "name", "")
+                    break
+        elif node_type == "function":
+            function_name = node_name
+        elif node_type == "class":
+            class_name = node_name
+        
+        retrieval_source = ["semantic"]
+        if hasattr(retriever, '_bm25_search'):
+            retrieval_source.append("bm25")
+        if hasattr(reasoner, 'last_trace') and reasoner.last_trace:
+            if reasoner.last_trace.get("mode") == "llm_hybrid":
+                retrieval_source.append("reranked")
+        
+        candidate_reports.append({
+            "rank": rank,
+            "entity_id": node_id,
+            "entity_name": node_name,
+            "entity_type": node_type,
+            "file_path": safe_attr(node, "file_path", ""),
+            "line_range": [line_start, line_end] if line_start else None,
+            "class_name": class_name,
+            "function_name": function_name,
+            "code_snippet": str(safe_attr(node, "code", "") or "")[:500],
+            "retrieval_source": retrieval_source,
+            "relevance_score": round(score, 4),
+            "policy_score": round(score, 4),
+            "verification_status": verify_result.get("verdict", "unknown").capitalize(),
+            "confidence_score": verify_result.get("confidence", 0.5),
+            "reasoning": verify_result.get("evidence", ["No reasoning provided"])[0] if verify_result.get("evidence") else "No reasoning provided",
+        })
 
     # 导航终点单独验证
     final_node_id = env.current_node
-    final_node = graph.nodes.get(final_node_id)
+    final_node = graph.nodes.get(final_node_id) if final_node_id else None
     final_navigation_verification = verifier.debate(issue, final_node_id) if final_node_id is not None else None
     refiner = SnippetRefiner()
     snippet = []
-    if final_node and final_node.code:
+    if final_node and hasattr(final_node, "code") and final_node.code:
         snippet = refiner.refine(issue, final_node.code)
-    # 最终主结果：优先取 rerank 后 top-1，而不是盲信 RL 最终停点
+    
     primary_result = candidate_reports[0] if candidate_reports else {
         "rank": 1,
-        "node_id": final_node_id,
-        "score": 0.0,
+        "entity_id": final_node_id,
         "entity_name": safe_attr(final_node, "name", "unknown") if final_node else "unknown",
         "entity_type": safe_attr(final_node, "type", "unknown") if final_node else "unknown",
         "file_path": safe_attr(final_node, "file_path", "") if final_node else "",
-        "line_number": safe_attr(final_node, "line_number", None) if final_node else None,
-        "verifier_verdict": final_navigation_verification.get("verdict") if final_navigation_verification else None,
-        "evidence": final_navigation_verification.get("evidence", [])[:8] if final_navigation_verification else [],
-        "code_preview": str(safe_attr(final_node, "code", "") or "")[:300] if final_node else "",
+        "line_range": None,
+        "class_name": None,
+        "function_name": safe_attr(final_node, "name", "unknown") if final_node else "unknown",
+        "code_snippet": str(safe_attr(final_node, "code", "") or "")[:500] if final_node else "",
+        "retrieval_source": ["navigation"],
+        "relevance_score": 0.0,
+        "policy_score": 0.0,
+        "verification_status": final_navigation_verification.get("verdict", "unknown").capitalize() if final_navigation_verification else "Unknown",
+        "confidence_score": final_navigation_verification.get("confidence", 0.0) if final_navigation_verification else 0.0,
+        "reasoning": final_navigation_verification.get("evidence", ["No reasoning"])[0] if final_navigation_verification and final_navigation_verification.get("evidence") else "Navigation end point",
     }
-    if isinstance(primary_result, dict):
+    
+    if isinstance(primary_result, dict) and snippet:
         primary_result["snippet"] = snippet
 
+    # 构建导航轨迹
+    navigation_trajectory = []
+    for step in trace:
+        traj_item = {
+            "step": step["step"] + 1,
+            "current_entity": step["to_node_name"],
+            "action": step["action"],
+            "observation": f"Moved from {step['from_node_name']} to {step['to_node_name']}, reward={step['reward']:.3f}",
+        }
+        if step["action"] == "CALL" and "action_details" in step:
+            tool_names = ["SemanticScout", "CodeExplorer", "ContextProbe"]
+            tool_idx = step["action_details"][2] if isinstance(step["action_details"], list) and len(step["action_details"]) > 2 else 0
+            traj_item["tool"] = tool_names[tool_idx] if tool_idx < len(tool_names) else "Unknown"
+        navigation_trajectory.append(traj_item)
+
+    # Verifier 反馈
+    verifier_feedback = {
+        "claim": f"The fault is most likely in {primary_result.get('entity_name', 'unknown')}",
+        "challenge": "Could be class-level misconfiguration instead of method-level bug" if primary_result.get("entity_type") == "method" else "Could be broader context issue",
+        "final_decision": primary_result.get("verification_status", "Unknown"),
+        "confidence_score": primary_result.get("confidence_score", 0.5),
+    }
+
+    # 运行元数据
+    run_metadata = {
+        "total_steps": len(trace),
+        "tool_calls": sum(1 for t in trace if t["action"] == "CALL"),
+        "expanded_nodes": sum(1 for t in trace if t["action"] == "EXPAND"),
+        "runtime_seconds": round(time.time() - start_time, 2),
+        "model_name": "RL-NavFL",
+        "policy_model": "PPO",
+    }
+
     output = {
-        "request_id": str(uuid.uuid4()),
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "mode": "inference",
-        "sample_idx": sample_idx,
-        "repo_path": repo_path,
-        "bug_description": issue[:1000],
-        "primary_result": primary_result,
-        "navigation_final_node": {
-            "node_id": final_node_id,
-            "entity_name": safe_attr(final_node, "name", "unknown") if final_node else "unknown",
-            "entity_type": safe_attr(final_node, "type", "unknown") if final_node else "unknown",
-            "file_path": safe_attr(final_node, "file_path", "") if final_node else "",
-            "line_number": safe_attr(final_node, "line_number", None) if final_node else None,
-            "verifier_result": final_navigation_verification,
-        },
-        "top_candidates": candidate_reports,
-        "reasoner_trace": getattr(reasoner, "last_trace", None),
-        "navigation_trace": {
-            "total_steps": len(trace),
-            "early_stop_reason": early_stop_reason,
-            "path": trace,
-        },
+        "issue_id": f"custom-{uuid.uuid4().hex[:8]}",
+        "repo_name": repo_path.split("/")[-1],
+        "query": issue[:500],
+        "final_prediction": primary_result,
+        "top_k_candidates": candidate_reports,
+        "navigation_trajectory": navigation_trajectory,
+        "verifier_feedback": verifier_feedback,
+        "run_metadata": run_metadata,
     }
 
     output_file = args.output_file or f"fl_result_{uuid.uuid4().hex[:8]}.json"
@@ -387,16 +460,14 @@ def inference_mode(args):
     print("=" * 60)
     print(f"Primary file: {primary_result.get('file_path', '')}")
     print(f"Primary entity: {primary_result.get('entity_name', '')} ({primary_result.get('entity_type', '')})")
-    print(f"Primary score: {primary_result.get('score', 0.0):.4f}")
-    print(f"Verifier verdict: {primary_result.get('verifier_verdict')}")
+    print(f"Confidence: {primary_result.get('confidence_score', 0.0):.2f}")
+    print(f"Verifier verdict: {primary_result.get('verification_status', '')}")
     print(f"Navigation steps: {len(trace)}")
-    if early_stop_reason:
-        print(f"Early stop: {early_stop_reason}")
+    print(f"Runtime: {run_metadata['runtime_seconds']:.2f} seconds")
     print(f"Saved to: {output_file}")
     print("=" * 60)
 
     return output
-
 
 
 # ----------------------------------------------------------------------
@@ -409,9 +480,21 @@ def main():
     parser.add_argument("--mode", type=str, choices=["train", "inference"], default="train")
     parser.add_argument("--repo_path", type=str, default="data_storage/repos/astropy")
     parser.add_argument("--data_path", type=str, default="data_storage/SWE-bench_Lite/data/test-00000-of-00001.parquet")
+    parser.add_argument("--split", type=str, default="train", choices=["train", "val", "test"],
+                        help="Data split to use")
 
     parser.add_argument("--sample_idx", type=int, default=0)
     parser.add_argument("--issue_text", type=str, default=None)
+
+    # Dense Retrieval 参数
+    parser.add_argument("--use_dense", action="store_true", 
+                        help="Enable dense retrieval")
+    parser.add_argument("--dense_model_path", type=str, default="./dense_retriever_model",
+                        help="Path to dense retriever model")
+    parser.add_argument("--retriever_alpha", type=float, default=0.5,
+                        help="BM25 weight")
+    parser.add_argument("--retriever_beta", type=float, default=0.5,
+                        help="Dense retrieval weight")
 
     parser.add_argument("--timesteps", type=int, default=20000)
     parser.add_argument("--max_steps", type=int, default=20)
@@ -427,6 +510,9 @@ def main():
 
     parser.add_argument("--use_llm", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--llm_model", type=str, default="qwen2.5-coder:32b",
+                    help="LLM model to use (e.g., llama3:8b, qwen2.5-coder:32b)")
+
 
     # PPO params
     parser.add_argument("--learning_rate", type=float, default=5e-4)
@@ -434,6 +520,11 @@ def main():
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--tensorboard_log", type=str, default="./logs")
+    
+    # PPO 参数
+    parser.add_argument("--n_steps", type=int, default=2048, help="Number of steps per rollout")
+    parser.add_argument("--n_epochs", type=int, default=10, help="Number of epochs per rollout")
+    parser.add_argument("--gamma", type=float, default=0.99, help="Discount factor")
 
     args = parser.parse_args()
 

@@ -1,0 +1,13 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+usage: evaluate.py [-h] [--data_path DATA_PATH] [--repo_path REPO_PATH]
+                   [--split {train,val,test}] [--model_path MODEL_PATH]
+                   [--use_llm] [--device DEVICE]
+                   [--experiment {accuracy,efficiency,ablation,all}]
+                   [--use_dense] [--dense_model_path DENSE_MODEL_PATH]
+                   [--retriever_alpha RETRIEVER_ALPHA]
+                   [--retriever_beta RETRIEVER_BETA]
+                   [--retriever_gamma RETRIEVER_GAMMA]
+evaluate.py: error: unrecognized arguments: --max_steps 30
