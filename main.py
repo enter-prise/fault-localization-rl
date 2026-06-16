@@ -229,8 +229,8 @@ def inference_mode(args):
         beta=args.retriever_beta,
     )
 
-    verifier = VerifierAgent(graph, use_llm=args.use_llm)
-    reasoner = ReasonerAgent(graph, retriever, use_llm=args.use_llm)
+    verifier = VerifierAgent(graph, model_name=args.llm_model, use_llm=args.use_llm)
+    reasoner = ReasonerAgent(graph, retriever, model_name=args.llm_model, use_llm=args.use_llm)
 
     model = None
     if args.model_path:
@@ -325,7 +325,50 @@ def inference_mode(args):
         top_k=max(args.top_k_retrieval, 10),
     )
 
-    reranked = reasoner.rerank(issue, retrieval_results)
+    rl_candidates = []
+    seen_entity_ids = set()
+    rl_candidate_sources = {}
+
+    def add_rl_candidate(entity_id, score=0.0, source="candidate_pool"):
+        if entity_id is None:
+            return
+        entity_id = str(entity_id)
+        if entity_id not in graph.nodes:
+            return
+        if entity_id in seen_entity_ids:
+            existing_source = rl_candidate_sources.get(entity_id, "")
+            if source and source not in existing_source.split("+"):
+                rl_candidate_sources[entity_id] = f"{existing_source}+{source}" if existing_source else source
+            return
+        seen_entity_ids.add(entity_id)
+        rl_candidate_sources[entity_id] = source
+        rl_candidates.append((entity_id, score))
+
+    for candidate in getattr(env, "last_submit_candidates", []):
+        entity_id = candidate.get("entity_id")
+        score = candidate.get("relevance_score", candidate.get("score", 0.0))
+        add_rl_candidate(entity_id, score, source="submit_candidates")
+
+    current_score = 0.5
+    for candidate in getattr(env, "candidate_pool", []):
+        if str(candidate.get("entity_id")) == str(env.current_node):
+            current_score = candidate.get("relevance_score", candidate.get("score", current_score))
+            break
+    add_rl_candidate(env.current_node, current_score, source="current_node")
+
+    for candidate in getattr(env, "candidate_pool", []):
+        entity_id = candidate.get("entity_id")
+        score = candidate.get("relevance_score", candidate.get("score", 0.0))
+        add_rl_candidate(entity_id, score, source="candidate_pool")
+
+    candidate_pool_empty = not bool(getattr(env, "candidate_pool", []))
+    only_current_node_candidate = (
+        len(rl_candidates) == 1
+        and str(rl_candidates[0][0]) == str(env.current_node)
+    )
+    retrieval_fallback_used = not bool(rl_candidates) or (candidate_pool_empty and only_current_node_candidate)
+    rerank_input_candidates = rl_candidates if rl_candidates else retrieval_results
+    reranked = reasoner.rerank(issue, rerank_input_candidates)
 
     candidate_reports = []
     for rank, (node_id, score) in enumerate(reranked[: args.final_top_k], start=1):
@@ -445,6 +488,15 @@ def inference_mode(args):
         "repo_name": repo_path.split("/")[-1],
         "query": issue[:500],
         "final_prediction": primary_result,
+        "rl_candidates": [
+            {
+                "entity_id": node_id,
+                "score": round(float(score), 4),
+                "source": rl_candidate_sources.get(str(node_id), "unknown"),
+            }
+            for node_id, score in rl_candidates
+        ],
+        "retrieval_fallback_used": retrieval_fallback_used,
         "top_k_candidates": candidate_reports,
         "navigation_trajectory": navigation_trajectory,
         "verifier_feedback": verifier_feedback,
